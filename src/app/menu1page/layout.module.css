@@ -1,4 +1,8 @@
-.menu1page_wrapper{
+.menu1page_wrapper {
     display: flex;
     justify-content: center;
+    && h1 {
+        font-size: 1vamx;
+        color: blue;
+    }
 }
