@@ -1,0 +1,117 @@
+.flex_layout{
+    display: inline-flex;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    overflow-wrap: revert-layer;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.flex_layout::-webkit-scrollbar{
+    display: none;
+}
+.flex_layout.row{
+    flex-direction: row;
+}
+
+.flex_layout.column{
+    flex-direction: column;
+}
+
+.flex_layout_container {
+    flex: 1 1 0%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.flex_layout_container > *{
+    width: 100%;
+    height: 100%;
+}
+
+.resize_panel{
+    background-color: #b1b1b1;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    flex: 0 0 0.1%;
+    position: relative;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    right: 0;
+    bottom: 0;
+}
+.resize_panel.row{
+    width: 4px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+.resize_panel.column{
+    width: 100%;
+    height: 4px;
+    cursor: ns-resize;
+}
+
+.resize_panel:hover > .hover {
+    width: inherit;
+    height: inherit;
+}
+
+.resize_panel > .hover{
+    opacity: 0;
+    visibility: hidden;
+    transition: all 1s;  
+}
+
+.resize_panel > .panel{
+    width: 100%;
+    height: 100%;
+}
+
+.resize_panel:hover{
+    animation-name: drag-panel-hover;
+    animation-fill-mode: forwards;
+    animation-direction: normal;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: cubic-bezier(1, -0.37, 0.73, 0.8);
+}
+
+.resize_panel:hover > .hover{
+    background-color: #0066ffb5;
+    z-index: 9999;
+    position: absolute;
+    display: block;
+    opacity: 1;
+    visibility: inherit;
+    transition: all 1s;
+    animation-name: drag-panel-hover-highlight;
+    animation-fill-mode: forwards;
+    animation-direction: normal;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: cubic-bezier(1, -0.37, 0.73, 0.8);
+}
+
+@keyframes drag-panel-hover {
+    0%{background-color: #b1b1b1d6;}
+    10%{background-color: #b1b1b1ba;}
+    20%{background-color: #b1b1b194;}
+    40%{background-color: #b1b1b17d;}
+    60%{background-color: #b1b1b152;}
+    80%{background-color: #b1b1b130;}
+    100%{background-color: #b1b1b100;animation-play-state: paused;}
+}
+@keyframes drag-panel-hover-highlight {
+    0%{opacity: 0;}
+    10%{opacity: 0.1;}
+    20%{opacity: 0.2;}
+    40%{opacity: 0.4;}
+    60%{opacity: 0.6;}
+    80%{opacity: 0.8;}
+    100%{opacity: 1;animation-play-state: paused;}
+}
