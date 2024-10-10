@@ -4,19 +4,21 @@
     margin: 0;
 }
 
-html,
-body {
-    max-width: 100vw;
-    overflow-x: hidden;
+html {
+    font-size: 1vmax;
+    font-family: serif;
 }
-
-body {
-    width: 100vw !important;
-    height: 100vh !important;
+body,
+html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100dvw;
+    height: 100dvh;
     margin: 0;
     display: inline-flex;
-    -ms-overflow-style: none;
+    flex-direction: column;
     scrollbar-width: none;
+    user-select: auto;
+    overflow: auto;
 }
 body::-webkit-scrollbar {
     display: none;

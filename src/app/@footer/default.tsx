@@ -1,11 +1,21 @@
-import styles from '@/app/@footer/page.module.css'
-import flexLayoutStyles from '@styles/flexLayout.module.css'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 const Default = () => {
     return (
-      <div id={styles.footer_wrapper}>
-        <div>footer array</div>
-      </div>
-    )
-  }
-  export default Default;
+        <Box
+            component="footer"
+            sx={{
+                p: 2,
+                backgroundColor: '#1976d2',
+                color: '#fff',
+                textAlign: 'center',
+            }}
+        >
+            <Typography variant="body2">
+                © 2024 NPL Platform. All rights reserved.
+            </Typography>
+        </Box>
+    );
+};
+export default Default;

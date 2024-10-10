@@ -1,73 +1,64 @@
-'use client'
-import Image from 'next/image'
-import styles from '@/app/page.module.css'
-import flexLayoutStyles from '@styles/flexLayout.module.css'
-import SideMenu, {sideMenuRef} from '@/app/@sideMenu/page'
-import {useRef, useEffect} from 'react'
+import Image from 'next/image';
+import styles from '@/app/page.module.css';
+import { Box, Button, Container, Typography } from '@mui/material';
+import PlanningSection from '@/components/PlanningSection';
+import AuctionList from '@/components/AuctionList';
+import RegionFilter from '@/components/RegionFilter';
+import AuctionListWrapper from '@/components/AuctionListWrapper';
 
 const Content = () => {
-  return (
-	<div>
-        <div>
-            <div className={styles.description}>
-                <p>
-                Get started by next js &nbsp;
-                </p>
-            </div>
-
-            <div className={styles.grid}>
-                <a
-                href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                className={styles.card}
-                target="_blank"
-                rel="noopener noreferrer"
+    const collaterals = [
+        { title: '담보 물건 A', price: '₩500,000', date: '2024-01-15' },
+        { title: '담보 물건 B', price: '₩1,000,000', date: '2024-02-15' },
+        { title: '담보 물건 C', price: '₩1,000,000', date: '2024-02-15' },
+        { title: '담보 물건 D', price: '₩1,000,000', date: '2024-02-15' },
+        { title: '담보 물건 E', price: '₩1,000,000', date: '2024-02-15' },
+        { title: '담보 물건 F', price: '₩1,000,000', date: '2024-02-15' },
+    ];
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    flexWrap: 'nowrap',
+                    textWrap: 'nowrap',
+                    overflowWrap: 'anywhere',
+                }}
+            >
+                {/* 담보 물건 기획전 */}
+                <PlanningSection />
+                <Box
+                    sx={{
+                        textAlign: 'center',
+                        padding: '1.5rem 0',
+                        backgroundColor: '#ffffff', // 흰색 배경
+                    }}
                 >
-                <h2>
-                    Docs <span>-&gt;</span>
-                </h2>
-                <p>Find in-depth information about Next.js features and API.</p>
-                </a>
-
-                <a
-                href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                className={styles.card}
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                <h2>
-                    Learn <span>-&gt;</span>
-                </h2>
-                <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-                </a>
-
-                <a
-                href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                className={styles.card}
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                <h2>
-                    Templates <span>-&gt;</span>
-                </h2>
-                <p>Explore the Next.js 13 playground.</p>
-                </a>
-
-                <a
-                href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                className={styles.card}
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                <h2>
-                    Deploy <span>-&gt;</span>
-                </h2>
-                <p>
-                    Instantly deploy your Next.js site to a shareable URL with Vercel.
-                </p>
-                </a>
-            </div>
-        </div>
-	</div>
-  )
-}
+                    <Typography
+                        variant="h5" // 적당한 크기로 설정
+                        sx={{
+                            fontFamily: 'serif',
+                            fontWeight: 'bold',
+                            color: '#1a1a1a', // 진한 회색 글자색으로 세련된 느낌
+                            letterSpacing: '0.1rem', // 글자 간격을 살짝 넓게 설정
+                            textTransform: 'uppercase', // 대문자로 설정해 깔끔한 느낌
+                        }}
+                    >
+                        TOP 100
+                    </Typography>
+                </Box>
+                {/* 정렬 및 필터 기능 */}
+                <RegionFilter />
+                {/* 담보 물건 목록 */}
+                <AuctionListWrapper>
+                    <AuctionList />
+                </AuctionListWrapper>
+            </Box>
+        </Box>
+    );
+};
 export default Content;

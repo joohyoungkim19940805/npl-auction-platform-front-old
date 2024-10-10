@@ -1,8 +1,5 @@
-#header_wrapper{
+#header_wrapper {
     flex: 0.1 1 0%;
     background: rgb(195, 195, 255);
     color: white;
-}
-
-.header{
 }
