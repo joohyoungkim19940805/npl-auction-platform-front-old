@@ -6,18 +6,20 @@ import { FlexLayoutContainer } from '@/components/flexLayout/FlexLayoutContainer
 
 const FlexLayout = (props: FlexLayoutProps) => {
     const { direction, childrenTemplate, children } = props;
-
+    //if (!childrenTemplate) return null;
     return (
         <div className={`${styles['flex-layout']}`} data-direction={direction}>
             {(children as ReactElement[]).map((child, index) => {
-                let fitContent: 'width' | 'height' | undefined = undefined;
-                if (childrenTemplate[index].isFitContent) {
-                    fitContent = direction === 'row' ? 'width' : 'height';
-                }
+                //let fitContent: 'width' | 'height' | undefined = undefined;
+                //if (childrenTemplate[index].isFitContent) {
+                const fitContent = direction === 'row' ? 'width' : 'height';
+                //}
+                const { panelMode, ...containerProps } =
+                    childrenTemplate[index];
                 return (
                     <Fragment key={index}>
                         <FlexLayoutContainer
-                            {...childrenTemplate[index]}
+                            {...containerProps}
                             fitContent={fitContent}
                             containerCount={(children && children.length) || 0}
                             layoutName={props.layoutName}
@@ -29,6 +31,7 @@ const FlexLayout = (props: FlexLayoutProps) => {
                             <FlexResizePanel
                                 direction={direction}
                                 childCount={(children && children.length) || 0}
+                                panelMode={panelMode}
                             />
                         )}
                     </Fragment>

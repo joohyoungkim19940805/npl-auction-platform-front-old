@@ -91,7 +91,6 @@ const RegionFilter = () => {
         { value: 'date-asc', label: '날짜 오름차순' },
         { value: 'date-desc', label: '날짜 내림차순' },
     ];
-    const [isTwoColumn, setIsTwoColumn] = useState<boolean>(false);
     const [selectedRegion, setSelectedRegion] = useState<Region | null>(null); // 상위 지역 선택 상태
     const [selectedSubRegion, setSelectedSubRegion] =
         useState<SubRegion | null>(null); // 하위 지역 선택 상태
@@ -112,7 +111,20 @@ const RegionFilter = () => {
     };
 
     return (
-        <Box sx={{ marginBottom: '1rem' }}>
+        <Box
+            sx={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 1000,
+                backgroundColor: 'rgba(255, 255, 255, 0.9)', // 투명한 흰 배경
+                //boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)', // 부드러운 그림자
+                padding: '1rem',
+                borderRadius: '8px',
+                marginBottom: '1rem',
+                backdropFilter: 'blur(10px)', // 배경 블러 효과
+                transition: 'background-color 0.3s ease-in-out', // 배경색 전환 애니메이션
+            }}
+        >
             {/* 보기 옵션 및 필터/정렬 기능 */}
             <Box
                 sx={{
@@ -120,53 +132,86 @@ const RegionFilter = () => {
                     justifyContent: 'space-between',
                     marginBottom: '1rem',
                     flexWrap: 'wrap',
-                    gap: '5vw',
+                    gap: '2rem',
                 }}
             >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        fontWeight: 'bold',
+                        marginBottom: '1rem',
+                        color: '#003366',
+                    }}
+                >
+                    검색 조건
+                </Typography>
                 <OneTwoWayButton />
 
                 {/* 정렬 조건 */}
-                <FormControl variant="outlined">
-                    <InputLabel>정렬 조건</InputLabel>
-                    <Select defaultValue={'date-desc'} label="정렬 조건">
-                        {sortOptions.map(option => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        width: '100%',
+                    }}
+                >
+                    <FormControl
+                        variant="outlined"
+                        sx={{ width: '100%', maxWidth: '50dvw' }}
+                    >
+                        <InputLabel>정렬 조건</InputLabel>
+                        <Select defaultValue={'date-desc'} label="정렬 조건">
+                            {sortOptions.map(option => (
+                                <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                >
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
                 {/* 지역별 필터 */}
-                <Autocomplete
-                    options={regions}
-                    getOptionLabel={option => option.label}
-                    defaultValue={regions[0]} // 첫 번째 옵션을 기본값으로 설정
-                    onChange={handleRegionChange}
-                    renderInput={params => (
-                        <TextField
-                            {...params}
-                            label="지역 검색"
-                            variant="outlined"
-                        />
-                    )}
-                />
-                {/* 하위 지역 선택 (상위 지역 선택 후에만 활성화) */}
-                {selectedRegion && selectedRegion.value !== 'all' && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        width: '100%',
+                    }}
+                >
                     <Autocomplete
-                        options={subRegions[selectedRegion.value] || []}
+                        options={regions}
                         getOptionLabel={option => option.label}
-                        defaultValue={subRegions[selectedRegion.value][0]}
-                        onChange={handleSubRegionChange}
+                        defaultValue={regions[0]} // 첫 번째 옵션을 기본값으로 설정
+                        onChange={handleRegionChange}
                         renderInput={params => (
                             <TextField
                                 {...params}
-                                label="하위 지역 검색"
+                                label="지역 검색"
                                 variant="outlined"
                             />
                         )}
+                        sx={{ minWidth: '30%' }}
                     />
-                )}
+                    {/* 하위 지역 선택 (상위 지역 선택 후에만 활성화) */}
+                    {selectedRegion && selectedRegion.value !== 'all' && (
+                        <Autocomplete
+                            options={subRegions[selectedRegion.value] || []}
+                            getOptionLabel={option => option.label}
+                            defaultValue={subRegions[selectedRegion.value][0]}
+                            onChange={handleSubRegionChange}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    label="하위 지역 검색"
+                                    variant="outlined"
+                                />
+                            )}
+                            sx={{ minWidth: '30%' }}
+                        />
+                    )}
+                </Box>
             </Box>
         </Box>
     );

@@ -11,6 +11,12 @@ import { EmotionProvider } from '@/app/emotion';
 import ConvertFontSize from '@/components/providers/FontSizeProvider';
 import { headers } from 'next/headers'; // headers 함수 사용
 import ScrollRestorationProvider from '@/components/providers/ScrollRestorationProvider';
+import { Box } from '@mui/material';
+
+import Top from '@/app/@top/default';
+import Bottom from '@/app/@bottom/default';
+import Footer from '@/app/@footer/default';
+import Left from '@/app/@left/default';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,11 +41,13 @@ const RootLayout = ({
     children,
     top,
     bottom,
+    footer,
     left,
 }: {
     children: ReactNode;
     top: ReactNode;
     bottom: ReactNode;
+    footer: ReactNode;
     left: ReactNode;
 }) => {
     console.log(top, bottom, left);
@@ -58,7 +66,7 @@ const RootLayout = ({
                 <EmotionProvider>
                     <FlexLayout
                         direction="column"
-                        layoutName="home"
+                        layoutName="root"
                         childrenTemplate={[
                             {
                                 'data-grow': 0.18,
@@ -70,42 +78,54 @@ const RootLayout = ({
                             {
                                 'data-grow': 3 - (0.25 + 0.19),
                                 'data-is_resize': true,
+                                panelMode: 'bottom-cylinder',
                                 containerName: 'main',
                             },
                             {
                                 'data-grow': 0.195,
-                                'data-is_resize': true,
+                                'data-is_resize': false,
                                 isFitContent: true,
-                                isFitResize: true,
+                                isFitResize: false,
                                 containerName: 'bottom',
                             },
                         ]}
                     >
-                        {top}
+                        {top || <Top />}
 
                         <FlexLayout
                             layoutName="main"
                             direction="row"
                             childrenTemplate={[
                                 {
-                                    'data-grow': 0,
+                                    'data-grow': isSsrMobile ? 0 : 0.35,
                                     'data-is_resize': true,
                                     isFitContent: true,
-                                    isFitResize: false,
+                                    isFitResize: !isSsrMobile,
                                     containerName: 'lnb',
                                 },
                                 {
                                     'data-grow': 2 - 0.2,
-                                    'data-is_resize': true,
+                                    'data-is_resize': false,
                                     containerName: 'content',
                                 },
                             ]}
                         >
-                            {left}
-                            {children}
+                            {left || <Left />}
+                            <Box
+                                sx={{
+                                    overflowY: 'visible',
+                                    overflowX: 'hidden',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                {children}
+                                {footer || <Footer />}
+                            </Box>
                         </FlexLayout>
 
-                        {bottom}
+                        {bottom || <Bottom />}
                     </FlexLayout>
                 </EmotionProvider>
             </body>

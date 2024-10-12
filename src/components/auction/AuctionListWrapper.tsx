@@ -26,6 +26,7 @@ const AuctionListWrapper = ({ children }: { children: ReactNode }) => {
             container
             spacing={2}
             sx={{
+                p: '1.5dvw',
                 justifyContent: 'center',
                 '& > .MuiGrid2-root': {
                     flexBasis: isTwoColumnView ? '45%' : '100%', // 자식 요소들의 width 제어

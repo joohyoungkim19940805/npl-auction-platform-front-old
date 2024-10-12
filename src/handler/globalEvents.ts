@@ -22,8 +22,9 @@ import {
 
 export let documentFocusout: Observable<FocusEvent>;
 export let documentFocusin: Observable<FocusEvent>;
+export let documentReady: Observable<Event>;
 export let windowResize: Observable<UIEvent>;
-export let windowHashChange: Observable<HashChangeEvent>;
+export let windowHashChange: Observable<string[]>;
 export let documentKeyDown: Observable<KeyboardEvent>;
 export let documentKeyUp: Observable<KeyboardEvent>;
 export let windowMouseUp: Observable<MouseEvent>;
@@ -59,7 +60,14 @@ if (typeof window !== 'undefined') {
         filter(() => document.activeElement?.tagName !== 'INPUT' && !isFocus)
     );
 
-    windowHashChange = fromEvent<HashChangeEvent>(window, 'hashchange');
+    documentReady = fromEvent<Event>(document, 'DOMContentLoaded');
+
+    windowHashChange = fromEvent<HashChangeEvent>(window, 'hashchange').pipe(
+        map(({ newURL, oldURL }) => [
+            newURL.split('#')[1],
+            oldURL.split('#')[1],
+        ])
+    );
 
     documentKeyDown = fromEvent<KeyboardEvent>(document, 'keydown');
     documentKeyUp = fromEvent<KeyboardEvent>(document, 'keyup');

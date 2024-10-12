@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
+import type { TouchEvent } from 'react';
 import styles from './FlexLayout.module.css';
 import flexDirectionModel from '@components/flexLayout/@types/FlexDirectionTypes';
 import {
@@ -8,24 +9,35 @@ import {
     isOverMove,
     mathWeight,
 } from '@/components/flexLayout/FlexLayoutUtils';
+import { ResizePanelMode } from '@/components/flexLayout/@types/FlexLayoutTypes';
 
 type FlexResizePanelProps = {
     direction: string;
     childCount: number;
+    panelMode?: ResizePanelMode;
 };
 
-const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
+const FlexResizePanel = ({
+    direction,
+    childCount,
+    panelMode = 'default',
+}: FlexResizePanelProps) => {
     let isResizePanelClick = false;
-    let prevTouchEvent: TouchEvent | null;
+    let prevTouchEvent: globalThis.TouchEvent | null;
     let parentSize: number;
     let totalMovement: number;
     const panelRef = useRef<HTMLDivElement>(null);
-    const panelMouseDownEvent = (event: any) => {
+    const panelMouseDownEvent = (
+        event:
+            | MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+            | TouchEvent<HTMLDivElement>
+    ) => {
         if (!panelRef.current || !panelRef.current.parentElement) return;
+
         isResizePanelClick = true;
-        parentSize = (
-            panelRef.current.parentElement.getBoundingClientRect() as any
-        )[flexDirectionModel[direction].sizeName];
+        parentSize = panelRef.current.parentElement.getBoundingClientRect()[
+            flexDirectionModel[direction].sizeName
+        ] as number;
         prevTouchEvent = null;
         totalMovement = 0;
 
@@ -44,12 +56,18 @@ const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
     function moveMouseFlex(
         originTarget: HTMLDivElement,
         resizePanel: HTMLDivElement,
-        moveEvent: any
+        moveEvent: {
+            movementX: number;
+            movementY: number;
+        }
     ) {
         return new Promise<void>(resolve => {
             let movement =
                 moveEvent[
-                    'movement' + flexDirectionModel[direction].xy.toUpperCase()
+                    ('movement' +
+                        flexDirectionModel[direction].xy.toUpperCase()) as
+                        | 'movementX'
+                        | 'movementY'
                 ];
             totalMovement += movement;
             const minSizeName = 'min-' + flexDirectionModel[direction].sizeName;
@@ -72,7 +90,8 @@ const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
             const targetMaxSize =
                 parseFloat(targetStyle.getPropertyValue(maxSizeName)) || 0;
             let targetSize =
-                targetRect[flexDirectionModel[direction].sizeName] + movement;
+                (targetRect[flexDirectionModel[direction].sizeName] as number) +
+                movement;
             if (targetMaxSize != 0 && targetSize >= targetMaxSize) {
                 return;
                 //targetSize = targetMaxSize;
@@ -164,7 +183,8 @@ const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
             if (!isResizePanelClick || !panelRef.current) {
                 return;
             }
-
+            event.preventDefault();
+            //event.stopPropagation();
             let targetElement = panelRef.current
                 .previousElementSibling as HTMLDivElement; //getContainerRefMap().get(activeIndex);
             let targetPanel = panelRef.current;
@@ -173,29 +193,31 @@ const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
             }
             let move = { movementX: 0, movementY: 0 };
 
-            if (window.TouchEvent && event instanceof TouchEvent) {
+            if (window.TouchEvent && event instanceof window.TouchEvent) {
                 if (!prevTouchEvent) {
-                    prevTouchEvent = event as TouchEvent;
+                    prevTouchEvent = event as globalThis.TouchEvent;
                     //setPrevTouchEvent(event as TouchEvent);
                     return;
                 }
                 move.movementX =
                     (prevTouchEvent.touches[0].pageX -
-                        (event as TouchEvent).touches[0].pageX) *
+                        (event as globalThis.TouchEvent).touches[0].pageX) *
                     -1;
                 move.movementY =
                     (prevTouchEvent.touches[0].pageY -
-                        (event as TouchEvent).touches[0].pageY) *
+                        (event as globalThis.TouchEvent).touches[0].pageY) *
                     -1;
                 prevTouchEvent = event;
             } else {
-                move.movementX = (event as MouseEvent).movementX;
-                move.movementY = (event as MouseEvent).movementY;
+                move.movementX = (event as globalThis.MouseEvent).movementX;
+                move.movementY = (event as globalThis.MouseEvent).movementY;
             }
             moveMouseFlex(targetElement, targetPanel, move);
         };
         new Array('mousemove', 'touchmove').forEach(eventName => {
-            window.addEventListener(eventName, addGlobalMoveEvent);
+            window.addEventListener(eventName, addGlobalMoveEvent, {
+                passive: false,
+            });
         });
         new Array('mouseup', 'touchend').forEach(eventName => {
             window.addEventListener(eventName, panelMouseUpEvent);
@@ -212,7 +234,7 @@ const FlexResizePanel = ({ direction, childCount }: FlexResizePanelProps) => {
 
     return (
         <div
-            className={`${styles['flex-resize-panel']}`}
+            className={`${styles['flex-resize-panel']} ${styles[panelMode]}`}
             ref={panelRef}
             onMouseDown={event => panelMouseDownEvent(event)}
             onTouchStart={event => panelMouseDownEvent(event)}

@@ -2,9 +2,10 @@ import Image from 'next/image';
 import styles from '@/app/page.module.css';
 import { Box, Button, Container, Typography } from '@mui/material';
 import PlanningSection from '@/components/PlanningSection';
-import AuctionList from '@/components/AuctionList';
+import AuctionList from '@/components/auction/AuctionList';
 import RegionFilter from '@/components/RegionFilter';
-import AuctionListWrapper from '@/components/AuctionListWrapper';
+import AuctionListWrapper from '@/components/auction/AuctionListWrapper';
+import YouTubeVideo from '@/components/YouTubeVideo';
 
 const Content = () => {
     const collaterals = [
@@ -21,9 +22,7 @@ const Content = () => {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
+                    width: '100%',
                     flexWrap: 'nowrap',
                     textWrap: 'nowrap',
                     overflowWrap: 'anywhere',
@@ -31,6 +30,7 @@ const Content = () => {
             >
                 {/* 담보 물건 기획전 */}
                 <PlanningSection />
+                <YouTubeVideo videoId="vr0ZiBAGyC0" />
                 <Box
                     sx={{
                         textAlign: 'center',

@@ -26,6 +26,6 @@ const ConvertFontSize = () => {
             covertFontSize(document.body.parentElement);
         });
     });
-    return <></>;
+    return null;
 };
 export default ConvertFontSize;

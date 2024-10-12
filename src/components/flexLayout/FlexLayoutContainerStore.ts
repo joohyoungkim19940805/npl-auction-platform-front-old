@@ -50,7 +50,7 @@ export const setContainerRef = (
 };
 
 // 특정 layoutName을 구독하는 함수
-export const getLayoutRef = (layoutName: string) => {
+export const getLayout = (layoutName: string) => {
     return flexContainerStore.asObservable().pipe(
         map((refs: RefStore) => refs[layoutName] || null),
         filter(ref => ref !== null)
@@ -75,7 +75,7 @@ export const getContainerRef = ({
                 // 모든 layout에서 해당 containerName의 ref 찾기
                 return Object.entries(refs).find(
                     ([key, value]) => refs[key][containerName]
-                )?.[1];
+                )?.[1][containerName];
             }
             // else {
             //     // 모든 layout에서 해당 containerName의 ref 찾기

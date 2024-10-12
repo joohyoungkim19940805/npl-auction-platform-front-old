@@ -1,10 +1,14 @@
 'use client';
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './FlexLayout.module.css';
 import { FlexContainerProps } from '@/components/flexLayout/@types/FlexLayoutTypes';
 import { useSize } from '@/handler/hooks/SizeChangeHooks';
-import { mathGrow } from '@/components/flexLayout/FlexLayoutUtils';
-import { setContainerRef } from '@/components/flexLayout/FlexLayoutContainerStore';
+import { mathGrow, remain } from '@/components/flexLayout/FlexLayoutUtils';
+import {
+    getLayout,
+    setContainerRef,
+} from '@/components/flexLayout/FlexLayoutContainerStore';
+import { filter } from 'rxjs';
 export const FlexLayoutContainer = ({
     isFitContent,
     isFitResize,
@@ -15,14 +19,16 @@ export const FlexLayoutContainer = ({
     ...props
 }: FlexContainerProps) => {
     const { ref, size } =
-        isFitContent && fitContent
-            ? useSize(fitContent)
-            : { ref: null, size: null };
+        // isFitContent && fitContent
+        //?
+        useSize(fitContent);
+    //: { ref: null, size: null };
     const flexContainerRef = useRef<HTMLDivElement>(null);
+    const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
     useEffect(() => {
         if (!flexContainerRef.current) return;
         setContainerRef(layoutName, containerName, flexContainerRef);
-    });
+    }, []);
     useEffect(() => {
         if (
             !flexContainerRef.current ||
@@ -39,19 +45,21 @@ export const FlexLayoutContainer = ({
                     ('client' + sizeName) as 'clientWidth' | 'clientHeight'
                 ]) ||
             0;
-
-        flexContainerRef.current.style[
-            ('max' + sizeName) as 'maxWidth' | 'maxHeight'
-        ] = size + 'px';
-        const newGrow = mathGrow(size, parentSize, containerCount);
-        if (isFitResize) {
-            flexContainerRef.current.dataset.grow = newGrow.toString();
-            flexContainerRef.current.style.flex = `${flexContainerRef.current.dataset.grow} 1 0%`;
-            flexContainerRef.current.dataset.prev_grow =
-                flexContainerRef.current.dataset.grow;
-        } else {
-            flexContainerRef.current.dataset.prev_grow = newGrow.toString();
+        if (isFitContent) {
+            flexContainerRef.current.style[
+                ('max' + sizeName) as 'maxWidth' | 'maxHeight'
+            ] = size + 'px';
         }
+        const newGrow = mathGrow(size, parentSize, containerCount);
+        if (!isFitResize && isFirstLoad) {
+            setIsFirstLoad(false);
+            return;
+        }
+
+        flexContainerRef.current.dataset.prev_grow =
+            flexContainerRef.current.dataset.grow;
+        flexContainerRef.current.dataset.grow = newGrow.toString();
+        flexContainerRef.current.style.flex = `${flexContainerRef.current.dataset.grow} 1 0%`;
     }, [size]);
 
     return (

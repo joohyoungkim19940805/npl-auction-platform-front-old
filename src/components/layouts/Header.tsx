@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -16,68 +17,28 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Link from 'next/link';
 import { Box } from '@mui/material';
+
 import {
     getContainerRef,
-    getLayoutRef,
+    getLayout,
 } from '@/components/flexLayout/FlexLayoutContainerStore';
 import {
     closeFlex,
     mathGrow,
     openFlex,
 } from '@/components/flexLayout/FlexLayoutUtils';
+import { lnbOpenSubject } from '@/handler/subject/LnbSubject';
 
-export type HeaderProps = {
-    isSsrMobile: boolean;
-};
-
-const Header = ({ isSsrMobile }: HeaderProps) => {
+const Header = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'), {
         defaultMatches: isSsrMobile,
     }); // 모바일 화면 여부 판단
     const headerRef = useRef<HTMLDivElement>(null);
-    const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(false);
-    const [containers, setContainers] = useState<HTMLElement[]>([]);
-    const [lnbContainer, setLnbContainer] = useState<HTMLElement>();
 
     useEffect(() => {
-        // 특정 layoutName과 containerName을 통해 ref를 구독
-        const subscription = getLayoutRef('main').subscribe(ref => {
-            if (ref) {
-                if (!ref['lnb'].current) return;
-                setContainers(
-                    Object.values(ref)
-                        .filter(
-                            (e): e is { current: HTMLElement } =>
-                                e.current !== null
-                        )
-                        .map(e => e.current)
-                );
-                setLnbContainer(ref['lnb'].current);
-            }
-        });
-        // 구독 해제
-        return () => subscription.unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        if (!lnbContainer) return;
-        if (isOpenSidebar) {
-            openFlex(lnbContainer, containers, {
-                openGrowImportant: mathGrow(
-                    parseInt(window.getComputedStyle(lnbContainer).maxWidth),
-                    lnbContainer.parentElement?.clientWidth ||
-                        window.outerWidth,
-                    containers.length
-                ),
-            });
-        } else {
-            closeFlex(lnbContainer, containers);
-        }
-    }, [isOpenSidebar, lnbContainer, containers]);
-
-    const toggleSidebar = () =>
-        setIsOpenSidebar(prevIsOpenSidebar => !prevIsOpenSidebar);
+        lnbOpenSubject.next(!isMobile);
+    }, [isMobile]);
 
     return (
         <>
@@ -105,15 +66,17 @@ const Header = ({ isSsrMobile }: HeaderProps) => {
                     }}
                 >
                     {/* 메뉴 열기 버튼 (모바일 및 PC 공통) */}
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={toggleSidebar}
-                        sx={{ pl: 3 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    {!isMobile && (
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            onClick={() => lnbOpenSubject.next()}
+                            sx={{ pl: 3 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    )}
 
                     {/* NPL Platform 로고 */}
                     <Typography
@@ -124,7 +87,7 @@ const Header = ({ isSsrMobile }: HeaderProps) => {
                             color: '#ffffff',
                             fontWeight: 'bold',
                             fontFamily: 'serif',
-                            position: 'absolute',
+                            position: isMobile ? 'sticky' : 'absolute',
                             left: '50%',
                             transform: 'translateX(-50%)', // 완전한 중앙 배치
                         }}
@@ -141,6 +104,21 @@ const Header = ({ isSsrMobile }: HeaderProps) => {
                                 color: '#ffffff',
                             }}
                         >
+                            {/* 검색 버튼 (헤더용) */}
+                            <Button
+                                component={Link}
+                                href="/search"
+                                startIcon={<SearchIcon />}
+                                sx={{
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                    '&:hover': {
+                                        borderColor: '#ddd',
+                                    },
+                                }}
+                            >
+                                검색
+                            </Button>
                             <Button
                                 color="inherit"
                                 component={Link}
@@ -154,13 +132,6 @@ const Header = ({ isSsrMobile }: HeaderProps) => {
                                 href="/register"
                             >
                                 회원가입
-                            </Button>
-                            <Button
-                                color="inherit"
-                                component={Link}
-                                href="/contact"
-                            >
-                                고객센터
                             </Button>
                         </Box>
                     )}

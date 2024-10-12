@@ -35,29 +35,19 @@ const AuctionTimer = ({
                         sx={{ marginRight: '0.07rem' }}
                     />{' '}
                     {/* 시간 아이콘 추가 */}
-                    {timeLeft.days !== undefined && (
-                        <Typography variant="body2">
-                            {timeLeft.days}일 {timeLeft.hours}시간
-                        </Typography>
-                    )}
-                    {timeLeft.hours !== undefined &&
-                        timeLeft.days === undefined && (
-                            <Typography variant="body2">
-                                {timeLeft.hours}시간 {timeLeft.minutes}분
-                            </Typography>
-                        )}
-                    {timeLeft.minutes !== undefined &&
-                        timeLeft.hours === undefined && (
-                            <Typography variant="body2">
-                                {timeLeft.minutes}분 {timeLeft.seconds}초
-                            </Typography>
-                        )}
-                    {timeLeft.seconds !== undefined &&
-                        timeLeft.minutes === undefined && (
-                            <Typography variant="body2">
-                                {timeLeft.seconds}초
-                            </Typography>
-                        )}
+                    <Typography variant="body2">
+                        {timeLeft.days !== undefined &&
+                            `${timeLeft.days}일 ${timeLeft.hours}시간`}
+                        {timeLeft.hours !== undefined &&
+                            timeLeft.days === undefined &&
+                            `${timeLeft.hours}시간 ${timeLeft.minutes}분`}
+                        {timeLeft.minutes !== undefined &&
+                            timeLeft.hours === undefined &&
+                            `${timeLeft.minutes}분 ${timeLeft.seconds}초`}
+                        {timeLeft.seconds !== undefined &&
+                            timeLeft.minutes === undefined &&
+                            `${timeLeft.seconds}초`}
+                    </Typography>
                 </>
             )}
         </Box>

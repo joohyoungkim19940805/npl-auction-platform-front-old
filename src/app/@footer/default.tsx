@@ -1,21 +1,20 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Footer from '@/components/layouts/Footer';
+import FooterWrapper from '@/components/layouts/FooterWrapper';
+import { Box, Typography, Link as MuiLink, Divider } from '@mui/material';
+import { headers } from 'next/headers'; // headers 함수 사용
 
 const Default = () => {
+    const userAgent = headers().get('user-agent') || '';
+
+    // 정규식을 통해 User-Agent에서 모바일 기기 확인
+    const isSsrMobile =
+        /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+            userAgent
+        );
     return (
-        <Box
-            component="footer"
-            sx={{
-                p: 2,
-                backgroundColor: '#1976d2',
-                color: '#fff',
-                textAlign: 'center',
-            }}
-        >
-            <Typography variant="body2">
-                © 2024 NPL Platform. All rights reserved.
-            </Typography>
-        </Box>
+        <FooterWrapper isSsrMobile={isSsrMobile}>
+            <Footer></Footer>
+        </FooterWrapper>
     );
 };
 export default Default;

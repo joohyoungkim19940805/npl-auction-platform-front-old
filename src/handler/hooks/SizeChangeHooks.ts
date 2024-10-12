@@ -11,12 +11,16 @@ export const useSize = (sizeName: 'height' | 'width') => {
         const childrenChangeObserver = new MutationObserver(
             (mutationList, observer) => {
                 mutationList.forEach(mutation => {
-                    if (!ref.current) return;
+                    if (!ref.current || !size) return;
                     const newSize =
                         ref.current.getBoundingClientRect()[
                             sizeName as keyof DOMRect
                         ];
-                    //if (newSize === size) return;
+                    if (
+                        newSize === size ||
+                        Math.abs((newSize as number) - size) < 5
+                    )
+                        return;
                     setSize(newSize);
                 });
             }
@@ -34,7 +38,7 @@ export const useSize = (sizeName: 'height' | 'width') => {
         });
         return () => {
             subscribe.unsubscribe();
-            childrenChangeObserver.disconnect();
+            //childrenChangeObserver.disconnect();
         };
     });
 

@@ -9,16 +9,16 @@ export type ResizePanelMode =
 
 export interface FlexLayoutChildrenType {
     ['data-is_resize']: boolean;
-    ['data-panel_mode']?: ResizePanelMode;
     ['data-grow']?: number;
     ['data-prev_grow']?: number;
+    panelMode?: ResizePanelMode;
     isFitContent?: boolean;
     isFitResize?: boolean;
     containerName: string;
 }
 
 export interface FlexContainerProps extends FlexLayoutChildrenType {
-    fitContent?: 'width' | 'height' | undefined;
+    fitContent: 'width' | 'height';
     children?: ReactNode;
     containerCount: number;
     layoutName: string;
