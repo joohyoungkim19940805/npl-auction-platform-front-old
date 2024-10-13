@@ -1,5 +1,6 @@
 'use client';
 import { OneTwoWayButton } from '@/components/buttons/OneTwoWayButton';
+import SortSelect from '@/components/SortSelect';
 import {
     Box,
     Button,
@@ -14,7 +15,7 @@ import {
     Autocomplete,
     TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 
 // 상위 지역 타입 정의
 interface Region {
@@ -84,16 +85,10 @@ const subRegions: { [key: string]: SubRegion[] } = {
     ],
 };
 const RegionFilter = () => {
-    // 정렬 옵션 목록
-    const sortOptions = [
-        { value: 'price-asc', label: '가격 오름차순' },
-        { value: 'price-desc', label: '가격 내림차순' },
-        { value: 'date-asc', label: '날짜 오름차순' },
-        { value: 'date-desc', label: '날짜 내림차순' },
-    ];
     const [selectedRegion, setSelectedRegion] = useState<Region | null>(null); // 상위 지역 선택 상태
     const [selectedSubRegion, setSelectedSubRegion] =
         useState<SubRegion | null>(null); // 하위 지역 선택 상태
+
     // 상위 지역 선택 시 실행되는 함수
     const handleRegionChange = (
         _event: React.ChangeEvent<{}>,
@@ -155,22 +150,7 @@ const RegionFilter = () => {
                         width: '100%',
                     }}
                 >
-                    <FormControl
-                        variant="outlined"
-                        sx={{ width: '100%', maxWidth: '50dvw' }}
-                    >
-                        <InputLabel>정렬 조건</InputLabel>
-                        <Select defaultValue={'date-desc'} label="정렬 조건">
-                            {sortOptions.map(option => (
-                                <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                >
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <SortSelect />
                 </Box>
                 {/* 지역별 필터 */}
                 <Box

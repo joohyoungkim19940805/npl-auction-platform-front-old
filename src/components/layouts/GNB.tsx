@@ -46,7 +46,6 @@ const GNB = () => {
             if (!layout || !firstGnbItemRef.current) return;
             const { bottom } = layout;
             if (!bottom || !bottom.current) return;
-            console.log('ism', isMobile);
             if (!isMobile) {
                 bottom.current.dataset.prev_grow = bottom.current.dataset.grow;
                 bottom.current.dataset.grow = '0';

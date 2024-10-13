@@ -33,3 +33,7 @@ a {
         color-scheme: dark;
     }
 }
+
+.custom-popover {
+    z-index: 1300; /* 기본 MUI popover보다 높은 값 */
+}

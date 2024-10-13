@@ -22,7 +22,7 @@ const AuctionInfoModal = ({ isOpen, onClose, infoText }: InfoModalProps) => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    maxWidth: '25dvw',
+                    maxWidth: '80dvh',
                     width: '95%',
                     bgcolor: 'background.paper',
                     p: 4,
