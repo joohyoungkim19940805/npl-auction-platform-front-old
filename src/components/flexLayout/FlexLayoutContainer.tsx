@@ -39,8 +39,8 @@ export const FlexLayoutContainer = ({
             !ref ||
             !ref.current ||
             !size ||
-            !fitContent //||
-            //getGrow(flexContainerRef.current) == 0
+            !fitContent
+            //||getGrow(flexContainerRef.current) == 0
         )
             return;
         const sizeName = `${fitContent.charAt(0).toUpperCase() + fitContent.substring(1)}`;
@@ -64,8 +64,12 @@ export const FlexLayoutContainer = ({
         flexContainerRef.current.dataset.prev_grow =
             flexContainerRef.current.dataset.grow;
         flexContainerRef.current.dataset.grow = newGrow.toString();
-        if (getGrow(flexContainerRef.current) != 0)
+        if (
+            getGrow(flexContainerRef.current) != 0 &&
+            flexContainerRef.current.hasAttribute('data-open')
+        ) {
             flexContainerRef.current.style.flex = `${flexContainerRef.current.dataset.grow} 1 0%`;
+        }
     }, [size]);
 
     return (
