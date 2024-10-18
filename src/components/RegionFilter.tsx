@@ -127,7 +127,7 @@ const RegionFilter = () => {
                     justifyContent: 'space-between',
                     marginBottom: '1rem',
                     flexWrap: 'wrap',
-                    gap: '2rem',
+                    gap: '1rem',
                 }}
             >
                 <Typography

@@ -1,4 +1,5 @@
 import { Box, Typography, Link as MuiLink, Divider } from '@mui/material';
+import Link from 'next/link';
 
 const Footer = () => {
     return (

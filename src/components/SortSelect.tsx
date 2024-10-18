@@ -27,7 +27,6 @@ const SortSelect = () => {
             options={sortOptions} // 옵션 목록
             getOptionLabel={option => option.label} // 각 옵션의 표시 라벨
             defaultValue={sortOptions[1]} // 현재 선택된 값
-            disableCloseOnSelect // 선택 시 드롭다운 닫지 않기
             onChange={(_, newValue) => {
                 if (newValue) setSelectedOption(newValue); // 새 값 설정
             }}
