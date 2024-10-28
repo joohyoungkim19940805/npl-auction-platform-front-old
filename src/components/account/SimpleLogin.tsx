@@ -1,6 +1,7 @@
 import { Box, Button, Link, Typography } from '@mui/material';
 import { LoginInputFields } from './LoginInputFields'; // 분리한 컴포넌트 가져오기
 import SnsLoginContainer from '@/components/account/SnsLogin';
+import SingUpGuide from '@/components/account/SingUpGuide';
 
 const SimpleLogin = () => {
     return (
@@ -17,6 +18,9 @@ const SimpleLogin = () => {
         >
             {/* 분리한 입력 필드 사용 */}
             <LoginInputFields />
+            {/* 회원가입 안내 문구 */}
+            <SingUpGuide></SingUpGuide>
+
             {/* 비밀번호/아이디 찾기 */}
             <Box
                 sx={{
