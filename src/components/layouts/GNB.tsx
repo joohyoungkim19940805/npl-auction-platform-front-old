@@ -125,7 +125,7 @@ const GNB = () => {
                         />
                     }
                     component={Link}
-                    href="/mypage" // 마이페이지로 링크 설정
+                    href="/authorization/mypage" // 마이페이지로 링크 설정
                 />
             </BottomNavigation>
         </>

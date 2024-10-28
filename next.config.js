@@ -2,5 +2,5 @@
 module.exports = {
     //export default{
     reactStrictMode: true,
-    trailingSlash: true,
+    pageExtensions: ['ts', 'tsx'],
 };

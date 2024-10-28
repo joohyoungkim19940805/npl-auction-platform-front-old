@@ -14,9 +14,15 @@ import { textAlign } from '@mui/system';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import RibbonBanner from '@/components/RibbonBanner';
-
+import SimpleUserProfile from '@/components/account/UserSimpleProfile';
+import SimpleLogin from '@/components/account/SimpleLogin';
 const Sidebar = (prop: any) => {
     let profileImage = undefined;
+    const userInfo = {
+        username: '홍길동',
+        likeCount: 5,
+    };
+    const isLogin = false;
     const userAgent = headers().get('user-agent') || '';
 
     // 정규식을 통해 User-Agent에서 모바일 기기 확인
@@ -48,53 +54,15 @@ const Sidebar = (prop: any) => {
                 }}
             >
                 {/* 사용자 정보 */}
-                <Box
-                    sx={{
-                        padding: '2rem',
-                        textAlign: 'center',
-                        textWrap: 'nowrap',
-                        width: 'fit-content',
-                    }}
-                >
-                    <Avatar
-                        sx={{
-                            bgcolor: profileImage ? 'transparent' : '#ffffff',
-                            color: profileImage ? 'transparent' : '#00274d',
-                            margin: 'auto',
-                            width: 64,
-                            height: 64,
-                        }}
-                        src={profileImage || undefined} // 프로필 이미지가 있으면 src에 이미지 경로를 추가
-                        alt={`${'홍길동'}님의 프로필`}
-                    >
-                        {/* 프로필 이미지가 없을 때만 첫 글자 표시 */}
-                        {!profileImage && '홍길동'.toUpperCase()}
-                    </Avatar>
-                    <Typography variant="h6" sx={{ marginTop: '1rem' }}>
-                        {'홍길동'}님 환영합니다
-                    </Typography>
-                    <Typography variant="body2" sx={{ marginTop: '0.5rem' }}>
-                        좋아요한 담보 물건: {5}개
-                    </Typography>
-                    {/* 마이페이지 링크 */}
-                    <Typography
-                        variant="body2"
-                        component={Link}
-                        href="/mypage"
-                        sx={{
-                            marginTop: '0.5rem',
-                            color: '#ffffff',
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                            textAlign: 'center',
-                        }}
-                    >
-                        마이페이지
-                    </Typography>
-                </Box>
+                {(isLogin && (
+                    <SimpleUserProfile
+                        profileImage={undefined}
+                        {...userInfo}
+                    ></SimpleUserProfile>
+                )) || <SimpleLogin></SimpleLogin>}
 
                 {/* 메뉴 목록 */}
-                <List sx={{ textWrap: 'nowrap' }}>
+                <List sx={{ textWrap: 'nowrap', overflowY: 'auto' }}>
                     <ListItem component={Link} href="/auction">
                         <ListItemIcon sx={{ color: '#ffffff' }}>
                             <Gavel />
@@ -109,7 +77,7 @@ const Sidebar = (prop: any) => {
                         <ListItemText primary="기획전" />
                     </ListItem>
 
-                    <ListItem component={Link} href="/mypage">
+                    <ListItem component={Link} href="/authorization/mypage">
                         <ListItemIcon sx={{ color: '#ffffff' }}>
                             <Person />
                         </ListItemIcon>
