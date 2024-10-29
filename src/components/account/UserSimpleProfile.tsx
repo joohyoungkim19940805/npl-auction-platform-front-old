@@ -28,7 +28,7 @@ const SimpleUserProfile = ({
                     height: 64,
                 }}
                 src={profileImage || undefined} // 프로필 이미지가 있으면 src에 이미지 경로를 추가
-                alt={`${'홍길동'}님의 프로필`}
+                alt={`${username}님의 프로필`}
             >
                 {/* 프로필 이미지가 없을 때만 첫 글자 표시 */}
                 {!profileImage && username.toUpperCase()}
