@@ -3,7 +3,11 @@ import { LoginInputFields } from './LoginInputFields'; // 분리한 컴포넌트
 import SnsLoginContainer from '@/components/account/SnsLogin';
 import SingUpGuide from '@/components/account/SingUpGuide';
 
-const SimpleLogin = () => {
+const SimpleLogin = ({
+    isSingUpGuide = false,
+}: {
+    isSingUpGuide?: boolean;
+}) => {
     return (
         <Box
             sx={{
@@ -19,7 +23,7 @@ const SimpleLogin = () => {
             {/* 분리한 입력 필드 사용 */}
             <LoginInputFields />
             {/* 회원가입 안내 문구 */}
-            <SingUpGuide></SingUpGuide>
+            <SingUpGuide isGuideText={isSingUpGuide}></SingUpGuide>
 
             {/* 비밀번호/아이디 찾기 */}
             <Box
