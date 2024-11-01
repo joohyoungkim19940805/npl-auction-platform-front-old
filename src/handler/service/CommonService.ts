@@ -5,12 +5,17 @@ import {
     Subscriber,
     catchError,
     concatMap,
+    from,
     map,
     of,
     shareReplay,
+    switchMap,
     take,
     tap,
 } from 'rxjs';
+
+import { fromFetch } from 'rxjs/fetch';
+
 import { AjaxError, AjaxResponse, ajax } from 'rxjs/ajax';
 
 const methodsMapper = {
@@ -24,7 +29,7 @@ export interface ServiceArguments<T, R> {
     endpoint: string;
     method: keyof typeof methodsMapper;
     body?: T;
-    resultHandler?: (response: AjaxResponse<ResponseWrapper<R>>) => void;
+    resultInterceptor?: (response: Response) => R;
     headers?: Readonly<Record<string, string>>;
 }
 export interface CacheForService {
@@ -42,16 +47,71 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const setDefaultHeaders = (headers: Record<string, string>) => {
     Object.assign(defaultHeaders, headers);
 };
-const setTokenHeader = (): Observable<void> => {
+
+const withTokenHeader = (): Observable<string> => {
+    if (typeof window === 'undefined') {
+        // 서버 환경에서 `cookies` 모듈을 한 번만 동적으로 임포트하여 `serverCookies`에 저장
+        const serverSideToken = from(
+            import('next/headers').then(({ cookies }) => {
+                return cookies().get('Authorization')?.value || '';
+            })
+        );
+
+        return serverSideToken;
+    }
+
+    // 클라이언트 환경에서는 ajax 호출을 통해 토큰을 가져옴
     return ajax<{ token: string }>('/api/auth/token').pipe(
-        tap(response => {
+        map(response => {
             const token = response.response.token;
             defaultHeaders['Authorization'] = `${token}`;
-        }),
-        map(() => undefined) // void 반환
+            return token;
+        })
     );
 };
 // T : request body, R : response data
+export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
+    const token$ = defaultHeaders['Authorization']
+        ? of(defaultHeaders['Authorization'])
+        : withTokenHeader();
+
+    return token$.pipe(
+        concatMap(token => {
+            const newHeaders = {
+                ...defaultHeaders,
+                ...(serviceArguments.headers || {}),
+            };
+            newHeaders['Authorization'] = token;
+            // console.log('defaultHeaders : ', defaultHeaders);
+            // console.log('serviceArguments : ', serviceArguments);
+            // console.log('token : ', token);
+            return fromFetch(
+                `${apiUrl}/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
+                {
+                    method: serviceArguments.method,
+                    body: serviceArguments.body
+                        ? JSON.stringify(serviceArguments.body)
+                        : undefined,
+                    headers: newHeaders,
+                }
+            ).pipe(
+                map(response => {
+                    if (serviceArguments.resultInterceptor) {
+                        return Promise.resolve(
+                            serviceArguments.resultInterceptor(response)
+                        );
+                    }
+                    if (!response.ok) {
+                        return Promise.reject(response);
+                    }
+                    return response.json() as Promise<R>;
+                }),
+                switchMap(e => e)
+            );
+        })
+    );
+};
+/*
 export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
     const headers$ = defaultHeaders['Authorization']
         ? of(defaultHeaders)
@@ -68,48 +128,66 @@ export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
                     ...(serviceArguments.headers || {}),
                 },
             }).pipe(
-                tap(result => {
-                    if (serviceArguments.resultHandler) {
-                        serviceArguments.resultHandler(result);
+                map(result => {
+                    if (serviceArguments.resultInterceptor) {
+                        return serviceArguments.resultInterceptor(result);
                     }
-                }),
-                map(result => result.response?.data)
+                    return result.response.data;
+                })
             )
         )
     );
 };
-
+*/
 const callApiForCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService
 ) => {
-    const headers$ = defaultHeaders['Authorization']
-        ? of(defaultHeaders)
-        : setTokenHeader().pipe(map(() => defaultHeaders));
+    let token$;
+    if (typeof window === 'undefined') {
+        // server side인 경우 개인화된 데이터를 캐싱하지 않도록 수정 // 2024 10 31
+        token$ = of('');
+    } else {
+        token$ = defaultHeaders['Authorization']
+            ? of(defaultHeaders['Authorization'])
+            : withTokenHeader();
+    }
+    return token$.pipe(
+        concatMap(token => {
+            const newHeaders = {
+                ...defaultHeaders,
+                ...(serviceArguments.headers || {}),
+            };
 
-    return headers$.pipe(
-        concatMap(headers =>
-            ajax<ResponseWrapper<R>>({
-                url: `${apiUrl}/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
-                body: serviceArguments.body,
-                method: serviceArguments.method,
-                headers: {
-                    ...headers,
-                    ...(serviceArguments.headers || {}),
-                },
-            }).pipe(
-                tap(result => {
-                    if (serviceArguments.resultHandler) {
-                        serviceArguments.resultHandler(result);
+            newHeaders['Authorization'] = token;
+            return fromFetch(
+                `${apiUrl}/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
+                {
+                    body: serviceArguments.body
+                        ? JSON.stringify(serviceArguments.body)
+                        : undefined,
+                    method: serviceArguments.method,
+                    headers: newHeaders,
+                }
+            ).pipe(
+                map(response => {
+                    if (serviceArguments.resultInterceptor) {
+                        return Promise.resolve(
+                            serviceArguments.resultInterceptor(response)
+                        );
                     }
+                    if (!response.ok) {
+                        return Promise.reject();
+                    }
+                    return response.json() as Promise<R>;
                 }),
-                map(result => result.response.data),
+                switchMap(e => e),
                 shareReplay(
                     cacheForService.cacheSize || 1,
                     cacheForService.cacheTime
                 )
-            )
-        )
+            );
+        })
     );
 };
 

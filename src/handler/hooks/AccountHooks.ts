@@ -1,10 +1,8 @@
 'use client';
 import { callApiCache } from '@handler/service/CommonService';
-import { ResponseWrapper } from '@type/ReesponseWrapper';
-import { AccountType } from '@type/service/AccountType';
 import { useEffect, useState } from 'react';
-import { catchError, map, of, Subject } from 'rxjs';
-import { AjaxError, ajax } from 'rxjs/ajax';
+import { catchError, Subject } from 'rxjs';
+import { AjaxError } from 'rxjs/ajax';
 
 const loginSubject = new Subject<boolean>();
 
@@ -18,10 +16,10 @@ export const useIsLogin = () => {
                 method: 'GET',
                 path: 'account',
                 endpoint: 'is-login',
-                resultHandler: response => {
-                    const isLoggedIn =
-                        response.status === 200 || response.status === 201;
+                resultInterceptor: result => {
+                    const isLoggedIn = result.ok;
                     loginSubject.next(isLoggedIn);
+                    return result.json();
                     //setIsLogin(isLoggedIn);
                 },
             },
@@ -35,10 +33,11 @@ export const useIsLogin = () => {
                     console.log(error);
                     loginSubject.next(false);
                     //setIsLogin(false);
-                    return of(false);
+                    return Promise.reject();
                 })
+                //switchMap(e => e) // Promise를 Observable로 변환하여 직접 사용할 수 있도록 함
             )
-            .subscribe(() => {
+            .subscribe(e => {
                 setIsFetch(false);
             });
 
@@ -59,18 +58,4 @@ export const useIsLogin = () => {
     }, []);
 
     return { isLogin, setIsFetch };
-};
-export const getAccountInfoService = () => {
-    return ajax<ResponseWrapper<AccountType>>(
-        '/api/account/search/get-info'
-    ).pipe(
-        map(response => {
-            console.log(response.response);
-            return response.response.data;
-        }),
-        catchError((error: AjaxError) => {
-            console.log(error);
-            return of(null);
-        })
-    );
 };

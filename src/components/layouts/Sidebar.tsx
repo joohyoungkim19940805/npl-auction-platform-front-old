@@ -21,12 +21,14 @@ import { callApi } from '@/handler/service/CommonService';
 import { AccountType } from '@/type/service/AccountType';
 import { ResponseWrapper } from '@/type/ReesponseWrapper';
 import { cookies } from 'next/headers';
+import { getAccountInfoService } from '@/handler/service/AccountService';
+
 // 서버에서 외부 API 호출
 async function getAccountInfo(): Promise<ResponseWrapper<AccountType> | null> {
     const cookieStore = cookies();
     const authToken = cookieStore.get('Authorization')?.value;
 
-    const res = await fetch(
+    const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/account/search/get-info`,
         {
             method: 'GET',
@@ -37,10 +39,10 @@ async function getAccountInfo(): Promise<ResponseWrapper<AccountType> | null> {
         }
     );
 
-    if (!res.ok) {
+    if (!response.ok) {
         return null;
     }
-    return res.json();
+    return response.json();
 }
 
 const Sidebar = async ({
@@ -50,17 +52,13 @@ const Sidebar = async ({
     activeIndex: number;
     isSsrMobile: boolean;
 }) => {
-    const wrapper = await getAccountInfo();
+    //const wrapper = await getAccountInfo();
+    const wrapper = await firstValueFrom(getAccountInfoService());
+
     const userInfo = wrapper?.data;
     const isLogin = wrapper != null && userInfo != undefined;
-    console.log(userInfo);
-    /*
-    const { isLogin, setIsFetch } = useIsLogin();
+    console.log(userInfo, 'userInfo');
 
-    useEffect(() => {
-        setIsFetch(true);
-    }, []);
-    */
     return (
         <>
             <SidebarProvider isSsrMobile={isSsrMobile} />
@@ -71,7 +69,8 @@ const Sidebar = async ({
                     flexShrink: 0,
                     position: 'relative',
                     '& .MuiDrawer-paper': {
-                        overflow: 'hidden',
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
                         height: '100%',
                         width: '100%',
                         position: 'static',
@@ -89,7 +88,7 @@ const Sidebar = async ({
                 )) || <SimpleLogin></SimpleLogin>}
 
                 {/* 메뉴 목록 */}
-                <List sx={{ textWrap: 'nowrap', overflowY: 'auto' }}>
+                <List sx={{ textWrap: 'nowrap' }}>
                     <ListItem component={Link} href="/auction">
                         <ListItemIcon sx={{ color: '#ffffff' }}>
                             <Gavel />

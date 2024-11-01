@@ -21,6 +21,7 @@ import {
 } from '@/components/flexLayout/FlexLayoutContainerStore';
 import { mathGrow } from '@/components/flexLayout/FlexLayoutUtils';
 import { lnbOpenSubject } from '@/handler/subject/LnbSubject';
+import { useIsLogin } from '@/handler/hooks/AccountHooks';
 
 const GNB = () => {
     const pathname = usePathname(); // 현재 경로 가져오기
@@ -69,6 +70,7 @@ const GNB = () => {
             subscription.unsubscribe();
         };
     });
+
     return (
         <>
             <BottomNavigation

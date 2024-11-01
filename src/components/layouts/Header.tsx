@@ -92,7 +92,7 @@ const Header = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
                             transform: 'translateX(-50%)', // 완전한 중앙 배치
                         }}
                     >
-                        NPL Platform
+                        NPL Auction
                     </Typography>
 
                     {/* PC 버전에서만 표시되는 로그인, 회원가입, 고객센터 버튼 */}
