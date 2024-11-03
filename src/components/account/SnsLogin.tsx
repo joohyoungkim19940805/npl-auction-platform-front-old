@@ -41,7 +41,7 @@ const SnsLogoButton = ({
                 src={src}
                 sx={{
                     width: '100%',
-                    maxWidth: '35dvh',
+                    maxWidth: '15rem',
                     height: 'auto',
                 }}
             ></Box>
