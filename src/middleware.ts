@@ -23,8 +23,8 @@ export async function middleware(request: NextRequest) {
             'redirect_uri',
             request.nextUrl.toString()
         );
-
-        return NextResponse.redirect(tempRedirectUrl);
+        return response;
+        //return NextResponse.redirect(tempRedirectUrl);
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
