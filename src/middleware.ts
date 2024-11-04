@@ -8,9 +8,9 @@ export async function middleware(request: NextRequest) {
     if (token) {
         response.cookies.set('Authorization', token, {
             httpOnly: true,
-            //secure: true,
+            secure: process.env.NODE_ENV === 'production',
             path: '/',
-            sameSite: 'lax',
+            sameSite: 'none',
         });
         request.nextUrl.searchParams.delete('token');
 
