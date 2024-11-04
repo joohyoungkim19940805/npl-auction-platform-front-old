@@ -10,11 +10,21 @@ export async function middleware(request: NextRequest) {
             httpOnly: true,
             //secure: true,
             path: '/',
-            sameSite: 'none',
+            sameSite: 'lax',
         });
         request.nextUrl.searchParams.delete('token');
-        //return response;
-        return NextResponse.redirect(request.nextUrl.toString());
+
+        // 토큰 쿼리 파라미터를 제거한 새 URL로 리다이렉트 (임시 페이지로 리다이렉트)
+        const tempRedirectUrl = new URL(
+            '/unauthorized/set-cookie-redirect',
+            request.nextUrl.origin
+        );
+        tempRedirectUrl.searchParams.set(
+            'redirect_uri',
+            request.nextUrl.toString()
+        );
+
+        return NextResponse.redirect(tempRedirectUrl);
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
