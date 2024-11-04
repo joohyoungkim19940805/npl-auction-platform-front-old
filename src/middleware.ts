@@ -2,40 +2,23 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-    const response = NextResponse.next();
     // /unauthorized/login-process 접근 시, token 쿼리스트링 값을 Authorization 쿠키로 설정
     const token = request.nextUrl.searchParams.get('token');
     if (token) {
+        const response = NextResponse.redirect(request.nextUrl.toString());
         response.cookies.set('Authorization', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            //secure: true,
             path: '/',
             sameSite: 'none',
         });
         request.nextUrl.searchParams.delete('token');
-
-        // 토큰 쿼리 파라미터를 제거한 새 URL로 리다이렉트 (임시 페이지로 리다이렉트)
-        const tempRedirectUrl = new URL(
-            '/unauthorized/set-cookie-redirect',
-            request.nextUrl.origin
-        );
-        tempRedirectUrl.searchParams.set(
-            'redirect_uri',
-            request.nextUrl.toString()
-        );
         return response;
-        //return NextResponse.redirect(tempRedirectUrl);
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
         const isAuthenticated = await checkAuthentication(request);
         if (!isAuthenticated) {
-            console.log(
-                'request',
-                request,
-                request.url,
-                request.nextUrl.origin
-            );
             return NextResponse.redirect(
                 new URL(
                     `/unauthorized?redirect_uri=${encodeURIComponent(`${request.nextUrl.origin}/unauthorized/login-process?redirect_uri=${request.url}`)}`,
@@ -47,7 +30,7 @@ export async function middleware(request: NextRequest) {
             );
         }
     }
-    return response; // 인증된 경우 계속 진행
+    return NextResponse.next(); // 인증된 경우 계속 진행
 }
 
 async function checkAuthentication(request: NextRequest) {
