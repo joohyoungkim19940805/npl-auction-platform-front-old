@@ -15,8 +15,8 @@ export async function middleware(request: NextRequest) {
 
         request.nextUrl.searchParams.delete('token');
 
-        // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
-        return response;
+        // token을 제거한 URL로 리라이트하여 response 반환
+        return NextResponse.rewrite(request.nextUrl);
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
