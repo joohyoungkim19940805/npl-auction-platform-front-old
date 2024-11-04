@@ -13,12 +13,10 @@ export async function middleware(request: NextRequest) {
             sameSite: 'none',
         });
 
-        if (response.cookies.get('Authorization')) {
-            request.nextUrl.searchParams.delete('token');
+        request.nextUrl.searchParams.delete('token');
 
-            // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
-            return NextResponse.redirect(request.nextUrl.toString());
-        }
+        // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
+        return response;
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
