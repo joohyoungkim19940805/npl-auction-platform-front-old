@@ -8,14 +8,17 @@ export async function middleware(request: NextRequest) {
     if (token) {
         response.cookies.set('Authorization', token, {
             httpOnly: true,
-            secure: true,
+            //secure: true,
             path: '/',
-            sameSite: 'lax',
+            sameSite: 'none',
         });
-        request.nextUrl.searchParams.delete('token');
 
-        // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
-        return NextResponse.redirect(request.nextUrl.toString());
+        if (response.cookies.get('Authorization')) {
+            request.nextUrl.searchParams.delete('token');
+
+            // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
+            return NextResponse.redirect(request.nextUrl.toString());
+        }
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
