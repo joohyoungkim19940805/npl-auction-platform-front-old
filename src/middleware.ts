@@ -5,6 +5,7 @@ export async function middleware(request: NextRequest) {
     // /unauthorized/login-process 접근 시, token 쿼리스트링 값을 Authorization 쿠키로 설정
     const token = request.nextUrl.searchParams.get('token');
     if (token) {
+        request.nextUrl.searchParams.delete('token');
         const response = NextResponse.redirect(request.nextUrl.toString());
         response.cookies.set('Authorization', token, {
             httpOnly: true,
@@ -12,7 +13,6 @@ export async function middleware(request: NextRequest) {
             path: '/',
             sameSite: 'none',
         });
-        request.nextUrl.searchParams.delete('token');
         return response;
     }
 
