@@ -2,6 +2,22 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
+    const response = NextResponse.next();
+    // /unauthorized/login-process 접근 시, token 쿼리스트링 값을 Authorization 쿠키로 설정
+    const token = request.nextUrl.searchParams.get('token');
+    if (token) {
+        response.cookies.set('Authorization', token, {
+            httpOnly: true,
+            secure: true,
+            path: '/',
+            sameSite: 'lax',
+        });
+        request.nextUrl.searchParams.delete('token');
+
+        // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
+        return NextResponse.redirect(request.nextUrl.toString());
+    }
+
     if (request.nextUrl.pathname.startsWith('/authorization')) {
         const isAuthenticated = await checkAuthentication(request);
         if (!isAuthenticated) {
@@ -21,21 +37,6 @@ export async function middleware(request: NextRequest) {
                 }
             );
         }
-    }
-    const response = NextResponse.next();
-    // /unauthorized/login-process 접근 시, token 쿼리스트링 값을 Authorization 쿠키로 설정
-    const token = request.nextUrl.searchParams.get('token');
-    if (token) {
-        response.cookies.set('Authorization', token, {
-            httpOnly: true,
-            secure: true,
-            path: '/',
-            sameSite: 'lax',
-        });
-        //request.nextUrl.searchParams.delete('token');
-
-        // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
-        //return NextResponse.redirect(request.nextUrl.toString());
     }
     return response; // 인증된 경우 계속 진행
 }
