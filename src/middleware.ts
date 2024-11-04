@@ -6,17 +6,15 @@ export async function middleware(request: NextRequest) {
     // /unauthorized/login-process 접근 시, token 쿼리스트링 값을 Authorization 쿠키로 설정
     const token = request.nextUrl.searchParams.get('token');
     if (token) {
-        if (response.cookies.get('Authorization')) {
-            request.nextUrl.searchParams.delete('token');
-            return NextResponse.redirect(request.nextUrl.toString());
-        }
         response.cookies.set('Authorization', token, {
             httpOnly: true,
             //secure: true,
             path: '/',
             sameSite: 'none',
         });
-        return response;
+        request.nextUrl.searchParams.delete('token');
+        //return response;
+        return NextResponse.redirect(request.nextUrl.toString());
     }
 
     if (request.nextUrl.pathname.startsWith('/authorization')) {
