@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
             path: '/',
             sameSite: 'lax',
         });
-        //request.nextUrl.searchParams.delete('token');
+        request.nextUrl.searchParams.delete('token');
 
         // token 쿼리 파라미터를 제거한 새 URL로 리다이렉트
         return NextResponse.redirect(request.nextUrl.toString());
