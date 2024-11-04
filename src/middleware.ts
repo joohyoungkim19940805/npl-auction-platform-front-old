@@ -9,9 +9,9 @@ export async function middleware(request: NextRequest) {
         const response = NextResponse.redirect(request.nextUrl.toString());
         response.cookies.set('Authorization', token, {
             httpOnly: true,
-            //secure: true,
+            secure: true,
             path: '/',
-            sameSite: 'none',
+            sameSite: 'lax',
         });
         return response;
     }
