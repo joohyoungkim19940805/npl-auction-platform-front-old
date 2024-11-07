@@ -1,17 +1,18 @@
 import GlobalModalWrapper from '@/components/modal/GlobalModalWrapper';
 import { ReactNode } from 'react';
 import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
-
-const ModelLayout = ({
-    children,
-    params,
-}: {
+interface ModelLayoutProps {
     children: ReactNode;
-    params: { modal_name: ModalType }; // Promise가 아닌 동기식 타입으로 수정
-}) => {
+    params: {
+        modal_name: ModalType;
+    };
+    types?: string[]; // 선택적 속성으로 지정
+}
+
+const ModelLayout = ({ children, params, types = [] }: ModelLayoutProps) => {
     const { modal_name: modalName } = params;
     return (
-        <GlobalModalWrapper isOpen={true} type={'message'}>
+        <GlobalModalWrapper isOpen={true} type={modalName}>
             {children}
         </GlobalModalWrapper>
     );
