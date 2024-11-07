@@ -5,17 +5,13 @@ import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
 const ModelLayout = ({
     children,
     params,
-    types,
 }: {
     children: ReactNode;
-    params: {
-        modal_name: ModalType;
-    };
-    types: string[]; // 예시로 string 배열로 설정
+    params: { modal_name: ModalType }; // Promise가 아닌 동기식 타입으로 수정
 }) => {
     const { modal_name: modalName } = params;
     return (
-        <GlobalModalWrapper isOpen={true} type={modalName}>
+        <GlobalModalWrapper isOpen={true} type={'message'}>
             {children}
         </GlobalModalWrapper>
     );
