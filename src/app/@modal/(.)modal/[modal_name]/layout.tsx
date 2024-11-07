@@ -2,16 +2,14 @@ import GlobalModalWrapper from '@/components/modal/GlobalModalWrapper';
 import { ReactNode } from 'react';
 import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
 
-const ModelLayout = async ({
+const ModelLayout = ({
     children,
     params,
-    searchParmas,
 }: {
     children: ReactNode;
-    params: Promise<{ modal_name: ModalType }>;
-    searchParmas: any;
+    params: any;
 }) => {
-    const { modal_name: modalName } = await params;
+    const { modal_name: modalName } = params;
     return (
         <GlobalModalWrapper isOpen={true} type={modalName}>
             {children}
