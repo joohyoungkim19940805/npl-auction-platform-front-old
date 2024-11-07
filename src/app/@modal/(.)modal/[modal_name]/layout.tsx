@@ -19,4 +19,7 @@ const ModelLayout = ({ children, params, types }: ModelLayoutProps) => {
     );
 };
 
+// displayName 추가
+ModelLayout.displayName = 'ModelLayout';
+
 export default ModelLayout;
