@@ -7,7 +7,7 @@ const ModelLayout = ({
     params,
 }: {
     children: ReactNode;
-    params: any;
+    params: { modal_name: ModalType }; // Promise가 아닌 동기식 타입으로 수정
 }) => {
     const { modal_name: modalName } = params;
     return (
