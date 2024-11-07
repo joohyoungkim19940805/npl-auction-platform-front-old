@@ -7,7 +7,7 @@ interface ModelLayoutProps {
     params: {
         modal_name: ModalType;
     };
-    types: string[]; // 필수 속성으로 지정
+    types: string[];
 }
 
 const ModelLayout = ({ children, params, types }: ModelLayoutProps) => {
