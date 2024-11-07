@@ -13,8 +13,7 @@ export const getAccountInfoService = () => {
         },
     }).pipe(
         catchError((errorResponse: Response) => {
-            //console.error('Error fetching account info:', errorResponse);
-            return of(null); // 에러 발생 시 null 반환
+            return of(null);
         })
     );
 };

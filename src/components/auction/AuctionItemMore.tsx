@@ -1,8 +1,8 @@
 'use client';
-import AuctionInfoModal from '@/components/auction/AuctionHelpModal';
 import MoreButton from '@/components/MoreButton';
 import { useState } from 'react';
 import { AuctionItem } from '@/components/auction/@types/AuctionItemType';
+import { useRouter } from 'next/navigation';
 
 const AuctionItemMore = ({
     assessmentAmount,
@@ -12,27 +12,47 @@ const AuctionItemMore = ({
     loanAmount,
 }: NonNullable<AuctionItem>) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+    const router = useRouter();
     const options = [
         {
             label: `보증금: ${protectionAmount.toLocaleString()}원`,
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+                router.push(
+                    '/modal/confirm?content_name=AuctionInfoModal&text=설명글입니다.&title=설명제목입니다.'
+                );
+            },
         },
         {
             label: `채권금액: ${loanAmount.toLocaleString()}원`,
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+                router.push(
+                    '/modal/confirm?content_name=AuctionInfoModal&text=설명글입니다.&title=설명제목입니다.'
+                );
+            },
         },
         {
             label: `저당권 설정금액: ${mortgageAmount.toLocaleString()}원`,
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+                router.push(
+                    '/modal/confirm?content_name=AuctionInfoModal&text=설명글입니다.&title=설명제목입니다.'
+                );
+            },
         },
         {
             label: `매각 가액: ${estimatedAmount.toLocaleString()}원`,
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+                router.push(
+                    '/modal/confirm?content_name=AuctionInfoModal&text=설명글입니다.&title=설명제목입니다.'
+                );
+            },
         },
         {
             label: `감정 평가액: ${assessmentAmount.toLocaleString()}원`,
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+                router.push(
+                    '/modal/confirm?content_name=AuctionInfoModal&text=설명글입니다.&title=설명제목입니다.'
+                );
+            },
         },
     ];
 
@@ -47,13 +67,6 @@ const AuctionItemMore = ({
                     top: 0,
                     left: 0,
                 }}
-            />
-
-            {/* 모달 */}
-            <AuctionInfoModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                infoText={'설명글 내용입니다.'}
             />
         </>
     );

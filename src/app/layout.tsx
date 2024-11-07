@@ -17,6 +17,7 @@ import Top from '@/app/@top/default';
 import Bottom from '@/app/@bottom/default';
 import Footer from '@/app/@footer/default';
 import Left from '@/app/@left/default';
+import Loading from '@/app/loading';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,21 +38,22 @@ export const viewport: Viewport = {
 
 //페이지 내부에서 병렬 컨텐츠를 이용할 경우 풀더 경로는 @
 
-const RootLayout = ({
+const RootLayout = async ({
     children,
     top,
     bottom,
     footer,
     left,
+    modal,
 }: {
     children: ReactNode;
     top: ReactNode;
     bottom: ReactNode;
     footer: ReactNode;
     left: ReactNode;
+    modal: ReactNode;
 }) => {
-    console.log(top, bottom, left);
-    const userAgent = headers().get('user-agent') || '';
+    const userAgent = (await headers()).get('user-agent') || '';
 
     // 정규식을 통해 User-Agent에서 모바일 기기 확인
     const isSsrMobile =
@@ -64,6 +66,7 @@ const RootLayout = ({
             <ConvertFontSize />
             <body className={inter.className}>
                 <EmotionProvider>
+                    {modal}
                     <FlexLayout
                         direction="column"
                         layoutName="root"

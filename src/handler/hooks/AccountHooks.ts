@@ -1,5 +1,5 @@
 'use client';
-import { callApiCache } from '@handler/service/CommonService';
+import { callApi, callApiCache } from '@handler/service/CommonService';
 import { useEffect, useState } from 'react';
 import { catchError, Subject } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
@@ -7,10 +7,10 @@ import { AjaxError } from 'rxjs/ajax';
 const loginSubject = new Subject<boolean>();
 
 export const useIsLogin = () => {
-    const [isLogin, setIsLogin] = useState<boolean>(false);
-    const [isFetch, setIsFetch] = useState(false);
+    const [isLogin, setIsLogin] = useState<boolean | null>(null);
+    const [isCallFetchSwitch, setIsCallFetchSwitch] = useState(false);
     useEffect(() => {
-        if (!isFetch) return;
+        if (!isCallFetchSwitch) return;
         const subscription = callApiCache<void, void>(
             {
                 method: 'GET',
@@ -38,7 +38,7 @@ export const useIsLogin = () => {
                 //switchMap(e => e) // Promise를 Observable로 변환하여 직접 사용할 수 있도록 함
             )
             .subscribe(e => {
-                setIsFetch(false);
+                setIsCallFetchSwitch(false);
             });
 
         return () => {
@@ -46,7 +46,7 @@ export const useIsLogin = () => {
                 subscription.unsubscribe();
             }
         };
-    }, [isFetch]);
+    }, [isCallFetchSwitch]);
 
     useEffect(() => {
         const subscription = loginSubject.subscribe(isLogin => {
@@ -57,5 +57,7 @@ export const useIsLogin = () => {
         };
     }, []);
 
-    return { isLogin, setIsFetch };
+    return { isLogin, setIsCallFetchSwitch };
 };
+
+export const handleLogout = () => {};

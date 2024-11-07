@@ -15,13 +15,18 @@ export async function middleware(request: NextRequest) {
         });
         return response;
     }
-
-    if (request.nextUrl.pathname.startsWith('/authorization')) {
+    if (
+        request.nextUrl.pathname.startsWith('/authorization') ||
+        request.nextUrl.pathname.startsWith('/unauthorized')
+    ) {
         const isAuthenticated = await checkAuthentication(request);
-        if (!isAuthenticated) {
+        if (
+            request.nextUrl.pathname.startsWith('/authorization') &&
+            !isAuthenticated
+        ) {
             return NextResponse.redirect(
                 new URL(
-                    `/unauthorized?redirect_uri=${encodeURIComponent(`${request.nextUrl.origin}/unauthorized/login-process?redirect_uri=${request.url}`)}`,
+                    `/unauthorized?redirect_uri=${request.url}`,
                     request.nextUrl.origin
                 ),
                 {
@@ -29,13 +34,21 @@ export async function middleware(request: NextRequest) {
                 }
             );
         }
+        if (
+            request.nextUrl.pathname.startsWith('/unauthorized') &&
+            isAuthenticated
+        ) {
+            return NextResponse.redirect(new URL(`/`, request.nextUrl.origin), {
+                status: 302,
+            });
+        }
     }
+
     return NextResponse.next(); // 인증된 경우 계속 진행
 }
 
 async function checkAuthentication(request: NextRequest) {
     // 여기에 인증 로직을 작성합니다. 예를 들어, 쿠키나 헤더에서 토큰을 확인할 수 있습니다.
-    console.log('kjg test :::?????? ');
 
     const token = request.cookies.get('Authorization');
 
@@ -67,5 +80,5 @@ async function checkAuthentication(request: NextRequest) {
     }
 }
 export const config = {
-    matcher: ['/:path*', '/authorization/:path*'], // 모든 경로와 /authorization 경로를 보호
+    matcher: ['/:path*'], //, '/authorization/:path*', '/unauthorized/:path*'], // 모든 경로와 /authorization 경로를 보호
 };

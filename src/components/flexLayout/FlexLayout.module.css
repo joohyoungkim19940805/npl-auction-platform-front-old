@@ -72,7 +72,7 @@
     }
     & .flex-resize-panel {
         background-color: rgb(115 115 115);
-        z-index: 100;
+        z-index: 1001;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -100,7 +100,7 @@
         &:hover > .hover[data-is_hover],
         &:active > .hover {
             background-color: #0066ffb5;
-            z-index: 1001;
+            z-index: 1002;
             position: absolute;
             display: block;
             opacity: 1;
@@ -150,7 +150,7 @@
                 background-color: hsla(0, 0%, 54%, 0.32);
                 content: ' ';
                 position: absolute;
-                z-index: 101;
+                z-index: 1002;
             }
             &:hover,
             &:hover::after,

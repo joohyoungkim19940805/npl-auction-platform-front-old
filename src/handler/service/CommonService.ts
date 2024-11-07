@@ -51,13 +51,13 @@ export const setDefaultHeaders = (headers: Record<string, string>) => {
 const withTokenHeader = (): Observable<string> => {
     if (typeof window === 'undefined') {
         // 서버 환경에서 `cookies` 모듈을 한 번만 동적으로 임포트하여 `serverCookies`에 저장
-        const serverSideToken = from(
-            import('next/headers').then(({ cookies }) => {
-                return cookies().get('Authorization')?.value || '';
+        const returnServerSideToken = from(
+            import('next/headers').then(async ({ cookies }) => {
+                return (await cookies()).get('Authorization')?.value || '';
             })
         );
 
-        return serverSideToken;
+        return returnServerSideToken;
     }
 
     // 클라이언트 환경에서는 ajax 호출을 통해 토큰을 가져옴

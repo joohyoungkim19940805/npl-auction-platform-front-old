@@ -34,6 +34,7 @@ export const FlexLayoutContainer = ({
         setContainerRef(layoutName, containerName, flexContainerRef);
     }, []);
     useEffect(() => {
+        // 컴포넌트 크기 및 설정값에 따른 사이즈 재조정
         if (
             !flexContainerRef.current ||
             !ref ||

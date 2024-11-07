@@ -74,7 +74,7 @@ const SnsLoginContainer = () => {
                 <SnsLogoButton registration="kakao"></SnsLogoButton>
 
                 {/* Apple 로그인 */}
-                <SnsLogoButton registration="apple"></SnsLogoButton>
+                {/*<SnsLogoButton registration="apple"></SnsLogoButton>*/}
             </Box>
         </Box>
     );

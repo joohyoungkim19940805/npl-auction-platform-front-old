@@ -1,9 +1,9 @@
 import Sidebar from '@/components/layouts/Sidebar';
 
 import { headers } from 'next/headers';
-const Default = () => {
+const Default = async () => {
     let activeIndex = 1;
-    const userAgent = headers().get('user-agent') || '';
+    const userAgent = (await headers()).get('user-agent') || '';
 
     // 정규식을 통해 User-Agent에서 모바일 기기 확인
     const isSsrMobile =

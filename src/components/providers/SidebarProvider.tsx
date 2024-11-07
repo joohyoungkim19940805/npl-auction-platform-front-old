@@ -44,15 +44,7 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
         const subscribe = lnbOpenSubject.subscribe(isOpenState => {
             if (!lnbContainer || containers.length === 0) return;
             const currentGrow = getGrow(lnbContainer);
-            if (window.location.hash == '#menu-open' && currentGrow == 0) {
-                history.replaceState(
-                    null,
-                    '',
-                    location.origin +
-                        location.pathname +
-                        location.search +
-                        window.location.hash
-                );
+            if (currentGrow === 0 || isOpenState) {
                 openFlex(lnbContainer, containers, {
                     isResize: !isMobile,
                     openGrowImportant: mathGrow(
@@ -64,15 +56,38 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
                         containers.length
                     ),
                 });
-                lnbContainer.setAttribute('data-open', '');
-            } else if ((!isOpenState && currentGrow === 0) || isOpenState) {
-                window.location.hash = '#menu-open';
-            } else if (window.location.hash == '#menu-open') {
-                window.history.back();
             } else {
                 closeFlex(lnbContainer, containers);
-                lnbContainer.removeAttribute('data-open');
             }
+            // if (window.location.hash == '#menu-open' && currentGrow == 0) {
+            //     history.replaceState(
+            //         null,
+            //         '',
+            //         location.origin +
+            //             location.pathname +
+            //             location.search +
+            //             window.location.hash
+            //     );
+            //     openFlex(lnbContainer, containers, {
+            //         isResize: !isMobile,
+            //         openGrowImportant: mathGrow(
+            //             parseInt(
+            //                 window.getComputedStyle(lnbContainer).maxWidth
+            //             ),
+            //             lnbContainer.parentElement?.clientWidth ||
+            //                 window.outerWidth,
+            //             containers.length
+            //         ),
+            //     });
+            //     lnbContainer.setAttribute('data-open', '');
+            // } else if ((!isOpenState && currentGrow === 0) || isOpenState) {
+            //     window.location.hash = '#menu-open';
+            // } else if (window.location.hash == '#menu-open') {
+            //     window.history.back();
+            // } else {
+            //     closeFlex(lnbContainer, containers);
+            //     lnbContainer.removeAttribute('data-open');
+            // }
         });
         // 뒤로가기시 메뉴가 열려있는 경우 메뉴가 자동으로 열리도록 하는 것은 사용성이 너무 좋지 않음
         // if (window.location.hash == '#menu-open') {
@@ -93,34 +108,35 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
             subscribe.unsubscribe();
         };
     }, [lnbContainer, containers]);
-    useEffect(() => {
-        const hashChangeSubscription = windowHashChange.subscribe(
-            ([newHash, oldHash]) => {
-                if (!lnbContainer) return;
-                if (newHash == 'menu-open') {
-                    openFlex(lnbContainer, containers, {
-                        isResize: !isMobile,
-                        openGrowImportant: mathGrow(
-                            parseInt(
-                                window.getComputedStyle(lnbContainer).maxWidth
-                            ),
-                            lnbContainer.parentElement?.clientWidth ||
-                                window.outerWidth,
-                            containers.length
-                        ),
-                    });
+    // useEffect(() => {
+    //     //특정 hash가 추가될 때 open or close
+    //     const hashChangeSubscription = windowHashChange.subscribe(
+    //         ([newHash, oldHash]) => {
+    //             if (!lnbContainer) return;
+    //             if (newHash == 'menu-open') {
+    //                 openFlex(lnbContainer, containers, {
+    //                     isResize: !isMobile,
+    //                     openGrowImportant: mathGrow(
+    //                         parseInt(
+    //                             window.getComputedStyle(lnbContainer).maxWidth
+    //                         ),
+    //                         lnbContainer.parentElement?.clientWidth ||
+    //                             window.outerWidth,
+    //                         containers.length
+    //                     ),
+    //                 });
 
-                    lnbContainer.setAttribute('data-open', '');
-                } else if (oldHash == 'menu-open') {
-                    closeFlex(lnbContainer, containers);
-                    lnbContainer.removeAttribute('data-open');
-                }
-            }
-        );
-        return () => {
-            hashChangeSubscription.unsubscribe();
-        };
-    }, [router, lnbContainer, containers]);
+    //                 lnbContainer.setAttribute('data-open', '');
+    //             } else if (oldHash == 'menu-open') {
+    //                 closeFlex(lnbContainer, containers);
+    //                 lnbContainer.removeAttribute('data-open');
+    //             }
+    //         }
+    //     );
+    //     return () => {
+    //         hashChangeSubscription.unsubscribe();
+    //     };
+    // }, [router, lnbContainer, containers]);
 
     return null;
 };

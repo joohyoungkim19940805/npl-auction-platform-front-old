@@ -1,3 +1,4 @@
+'use client';
 import { Avatar, Box, Typography } from '@mui/material';
 import Link from 'next/link';
 
@@ -13,6 +14,8 @@ const SimpleUserProfile = ({
     return (
         <Box
             sx={{
+                display: 'flex',
+                flexDirection: 'column',
                 padding: '2rem',
                 textAlign: 'center',
                 textWrap: 'nowrap',
@@ -39,16 +42,32 @@ const SimpleUserProfile = ({
             >
                 {username}님 환영합니다
             </Typography>
-            <Typography variant="body2" sx={{ marginTop: '0.5rem' }}>
-                좋아요한 담보 물건: {likeCount || 0}개
-            </Typography>
+            <Box
+                display={'flex'}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+            >
+                <Typography variant="body2" sx={{ marginTop: '0.5rem' }}>
+                    좋아요한 담보 물건 :
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            marginLeft: '0.25rem',
+                            textDecoration: 'underline',
+                            textUnderlineOffset: '0.17rem',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <Link href="/">{likeCount || 0} 개</Link>
+                    </Typography>
+                </Typography>
+            </Box>
             {/* 마이페이지 링크 */}
             <Typography
                 variant="body2"
                 component={Link}
-                href="/mypage"
+                href="/authorization/mypage"
                 sx={{
-                    marginTop: '0.5rem',
+                    marginTop: '0.85rem',
                     color: '#ffffff',
                     textDecoration: 'underline',
                     cursor: 'pointer',

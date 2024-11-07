@@ -23,28 +23,6 @@ import { ResponseWrapper } from '@/type/ReesponseWrapper';
 import { cookies } from 'next/headers';
 import { getAccountInfoService } from '@/handler/service/AccountService';
 
-// 서버에서 외부 API 호출
-async function getAccountInfo(): Promise<ResponseWrapper<AccountType> | null> {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get('Authorization')?.value;
-
-    const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/account/search/get-info`,
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: authToken || '',
-            },
-        }
-    );
-
-    if (!response.ok) {
-        return null;
-    }
-    return response.json();
-}
-
 const Sidebar = async ({
     activeIndex,
     isSsrMobile,
