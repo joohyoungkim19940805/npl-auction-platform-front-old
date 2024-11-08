@@ -18,8 +18,8 @@ export default function LoadingSpinner({
                 position: position,
                 top: 0,
                 left: 0,
-                height: '100dvh',
-                width: '100dvw',
+                height: '100%',
+                width: '100%',
                 zIndex: 9999,
                 backgroundColor: '#ffffffa6',
             }}

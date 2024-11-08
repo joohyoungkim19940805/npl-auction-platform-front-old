@@ -1,6 +1,4 @@
-import Image from 'next/image';
-import styles from '@/app/page.module.css';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import PlanningSection from '@/components/PlanningSection';
 import AuctionList from '@/components/auction/AuctionList';
 import RegionFilter from '@/components/RegionFilter';

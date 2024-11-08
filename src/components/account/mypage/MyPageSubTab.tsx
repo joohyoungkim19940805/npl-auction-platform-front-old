@@ -4,23 +4,17 @@ import { Box, Button, Typography, Tab, Tabs, Alert } from '@mui/material';
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { TabItem } from '@/components/tapbar/TabBar';
 
 const subTabs = {
     mypage: [],
 };
 
-export default function SubContentTab() {
-    const router = useRouter();
-    const pathName = usePathname();
-
+export default function MyPageSubTab({ subTabs }: { subTabs: TabItem[] }) {
     const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
+
     return (
-        <Box
-            position="sticky"
-            sx={{
-                top: 0,
-            }}
-        >
+        <Box sx={{ backgroundColor: 'white' }}>
             <Tabs
                 value={selectedSubTab}
                 onChange={(e, newValue) => setSelectedSubTab(newValue)}
@@ -30,9 +24,14 @@ export default function SubContentTab() {
                     },
                 }}
             >
-                <Tab label="회원 정보" component={Link} href={'#section-0'} />
-                <Tab label="통계" component={Link} href={'#section-1'} />
-                <Tab label="추천" component={Link} href={'#section-2'} />
+                {subTabs.map((subTab: TabItem, index) => (
+                    <Tab
+                        key={index}
+                        label={subTab.pageName}
+                        component={Link}
+                        href={subTab.url}
+                    />
+                ))}
             </Tabs>
         </Box>
     );

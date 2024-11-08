@@ -1,6 +1,7 @@
 'use client';
 import { OneTwoWayButton } from '@/components/buttons/OneTwoWayButton';
 import SortSelect from '@/components/SortSelect';
+import { LineTitle } from '@/components/typography/LineTitle';
 import {
     Box,
     Button,
@@ -130,18 +131,15 @@ const RegionFilter = () => {
                     gap: '1rem',
                 }}
             >
-                <Typography
+                <LineTitle
                     variant="h6"
-                    sx={{
-                        fontWeight: 'bold',
-                        marginBottom: '1rem',
-                        color: '#003366',
-                    }}
+                    lineColor={'#3b82f6'}
+                    textColor="#003366"
                 >
                     검색 조건
-                </Typography>
-                <OneTwoWayButton />
+                </LineTitle>
 
+                <OneTwoWayButton />
                 {/* 정렬 조건 */}
                 <Box
                     sx={{

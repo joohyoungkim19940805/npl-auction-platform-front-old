@@ -4,6 +4,7 @@ import AuctionTimer from '@/components/auction/AuctionTimer';
 import LikeButton from '@/components/LikeButton';
 import { calculateTimeLeft } from '@/handler/AuctionTimer';
 import { Paper, Typography, Box, Grid2 } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -124,7 +125,15 @@ const AuctionList = () => {
                                             paddingRight: '3.5dvw',
                                         }}
                                     >
-                                        <Box
+                                        <Image
+                                            src={item.representativeImageUrl}
+                                            alt={item.title}
+                                            layout="fill"
+                                            loading="lazy"
+                                            fill={true}
+                                            objectFit="contain"
+                                        />
+                                        {/*<Box
                                             component="img"
                                             src={item.representativeImageUrl}
                                             alt={item.title}
@@ -133,7 +142,7 @@ const AuctionList = () => {
                                                 height: '100%',
                                                 objectFit: 'scale-down',
                                             }}
-                                        />
+                                        />*/}
                                     </Box>
 
                                     <Box

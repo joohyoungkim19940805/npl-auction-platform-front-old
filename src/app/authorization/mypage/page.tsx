@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import CircularChart from '@/components/chart/CircleChart';
 import CircleChart from '@/components/chart/CircleChart';
-import LineTitle from '@/components/typography/LineTitle';
 import GrayButton from '@/components/buttons/GrayButton';
 import BlueButton from '@/components/buttons/BlueButton';
 import EllipsisTypography from '@/components/typography/EllipsisTypography';
+import { LineTitle } from '@/components/typography/LineTitle';
 const buildingTypeData = [30, 20, 50]; // 예시 데이터
 const regionData = [40, 25, 35];
 
@@ -51,6 +51,7 @@ export default function MyPage() {
                         padding: '3rem 1.5rem 0 1.5rem',
                         borderRadius: 2,
                         backgroundColor: '#fafafa',
+                        scrollMarginTop: '7rem',
                     }}
                 >
                     <LineTitle lineColor={'#3b82f6'}>회원정보</LineTitle>
@@ -106,6 +107,7 @@ export default function MyPage() {
                         padding: '3rem 1.5rem 1rem 1.5rem',
                         borderRadius: 2,
                         backgroundColor: '#fafafa',
+                        scrollMarginTop: '7rem',
                     }}
                 >
                     <LineTitle lineColor={'#3b82f6'}>통계</LineTitle>
@@ -171,6 +173,7 @@ export default function MyPage() {
                         padding: '3rem 1.5rem 1rem 1.5rem',
                         borderRadius: 2,
                         backgroundColor: '#fafafa',
+                        scrollMarginTop: '7rem',
                     }}
                 >
                     <LineTitle lineColor={'#3b82f6'}>추천</LineTitle>

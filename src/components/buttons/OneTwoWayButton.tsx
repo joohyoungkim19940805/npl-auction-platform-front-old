@@ -1,3 +1,4 @@
+import BlueButton from '@/components/buttons/BlueButton';
 import { oneTwoWaySubject } from '@/handler/subject/ListWaySubject';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -9,14 +10,14 @@ export const OneTwoWayButton = () => {
     }, [isTwoColumn]);
 
     return (
-        <Button
+        <BlueButton
             variant="contained"
             onClick={() => {
                 setIsTwoColumn(prev => !prev);
             }}
-            sx={{ textWrap: 'nowrap' }}
+            sx={{ textWrap: 'nowrap', marginLeft: 'auto' }}
         >
             {isTwoColumn ? '2줄 보기' : '1줄 보기'}
-        </Button>
+        </BlueButton>
     );
 };

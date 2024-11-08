@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { memo } from 'react';
 
 type YouTubeVideoProps = {
     videoId: string;
@@ -22,5 +23,5 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
         </Box>
     );
 };
-
-export default YouTubeVideo;
+YouTubeVideo.displayName = 'YouTubeVideo';
+export default memo(YouTubeVideo);
