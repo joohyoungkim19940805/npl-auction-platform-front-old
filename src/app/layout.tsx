@@ -10,7 +10,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { EmotionProvider } from '@/app/emotion';
 import ConvertFontSize from '@/components/providers/FontSizeProvider';
 import { headers } from 'next/headers'; // headers 함수 사용
-import ScrollRestorationProvider from '@/components/providers/ScrollRestorationProvider';
 import { Box } from '@mui/material';
 
 import Top from '@/app/@top/default';
