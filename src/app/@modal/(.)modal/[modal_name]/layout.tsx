@@ -7,9 +7,10 @@ interface ModelLayoutProps {
     params: {
         modal_name: ModalType;
     };
+    types: string[]; // types를 필수 속성으로 지정
 }
 
-const ModelLayout = ({ children, params }: ModelLayoutProps) => {
+const ModelLayout = ({ children, params, types }: ModelLayoutProps) => {
     const { modal_name: modalName } = params;
     return (
         <GlobalModalWrapper isOpen={true} type={modalName}>
