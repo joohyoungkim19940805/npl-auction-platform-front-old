@@ -16,7 +16,7 @@ import Top from '@/app/@top/default';
 import Bottom from '@/app/@bottom/default';
 import Footer from '@/app/@footer/default';
 import Left from '@/app/@left/default';
-import Loading from '@/app/loading';
+import { PageChangingLoading } from '@/components/PageChanger';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -122,7 +122,9 @@ const RootLayout = async ({
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                {children}
+                                <PageChangingLoading>
+                                    {children}
+                                </PageChangingLoading>
                                 {footer || <Footer />}
                             </Box>
                         </FlexLayout>
