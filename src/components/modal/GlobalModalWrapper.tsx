@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
 import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
-export default function GlobalModalWrapper({
+export const GlobalModalWrapper = ({
     isOpen: initOpen,
     type = 'message',
     onCancelAfterMoveUrl,
@@ -16,7 +16,7 @@ export default function GlobalModalWrapper({
     onCancelAfterMoveUrl?: string;
     onCheckAfterMoveUrl?: string;
     children: ReactNode;
-}) {
+}) => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(initOpen);
     useEffect(() => {
@@ -112,4 +112,9 @@ export default function GlobalModalWrapper({
             </Box>
         </Modal>
     );
-}
+};
+
+// displayName 추가
+GlobalModalWrapper.displayName = 'GlobalModalWrapper';
+
+export default GlobalModalWrapper;

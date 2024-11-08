@@ -7,10 +7,9 @@ interface ModelLayoutProps {
     params: {
         modal_name: ModalType;
     };
-    types: string[];
 }
 
-const ModelLayout = ({ children, params, types }: ModelLayoutProps) => {
+const ModelLayout = ({ children, params }: ModelLayoutProps) => {
     const { modal_name: modalName } = params;
     return (
         <GlobalModalWrapper isOpen={true} type={modalName}>
