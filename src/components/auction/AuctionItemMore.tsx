@@ -1,8 +1,8 @@
 'use client';
-import MoreButton from '@/components/MoreButton';
 import { useState } from 'react';
 import { AuctionItem } from '@/components/auction/@types/AuctionItemType';
 import { useRouter } from 'next/navigation';
+import MoreButton from '@/components/buttons/MoreButton';
 
 const AuctionItemMore = ({
     assessmentAmount,

@@ -3,6 +3,7 @@ import MainContent from '@/components/MainContent';
 import { Box, Button, Typography, Tab, Tabs, Alert } from '@mui/material';
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const subTabs = {
     mypage: [],
@@ -29,9 +30,9 @@ export default function SubContentTab() {
                     },
                 }}
             >
-                <Tab label="회원 정보" />
-                <Tab label="통계" />
-                <Tab label="추천" />
+                <Tab label="회원 정보" component={Link} href={'#section-0'} />
+                <Tab label="통계" component={Link} href={'#section-1'} />
+                <Tab label="추천" component={Link} href={'#section-2'} />
             </Tabs>
         </Box>
     );
