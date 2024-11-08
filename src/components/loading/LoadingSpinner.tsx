@@ -5,7 +5,7 @@ export default function LoadingSpinner({
     rect = 'center',
     size = { w: '11rem', h: '11rem' },
 }: {
-    position?: 'static' | 'absolute' | 'fixed';
+    position?: 'static' | 'absolute' | 'fixed' | 'sticky';
     rect?: 'start' | 'end' | 'center';
     size?: { w: string; h: string };
 }) {
@@ -17,8 +17,9 @@ export default function LoadingSpinner({
                 alignItems: 'center',
                 position: position,
                 top: 0,
-                height: '100%',
-                width: '100%',
+                left: 0,
+                height: '100dvh',
+                width: '100dvw',
                 zIndex: 9999,
                 backgroundColor: '#ffffffa6',
             }}

@@ -51,7 +51,7 @@ export const PageChangingLoading = ({ children }: { children: ReactNode }) => {
             {isLoading && <LoadingSpinner position="fixed" />}
             <main
                 ref={childrenRenderingObseverRef}
-                style={isLoading ? { display: 'none' } : {}}
+                style={isLoading ? { opacity: 0, visibility: 'hidden' } : {}}
             >
                 {children}
             </main>
