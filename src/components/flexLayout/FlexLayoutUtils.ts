@@ -73,10 +73,14 @@ export function mathGrow(
 ) {
     return containerCount * (childSize / parentSize);
 }
-export function getGrow(growTarget: HTMLElement) {
+export function getGrow(growTarget: HTMLElement | Element) {
+    const target =
+        growTarget instanceof Element
+            ? (growTarget as HTMLElement)
+            : growTarget;
     return (
-        parseFloat(growTarget.style.flex.split(' ')[0]) ||
-        parseFloat(growTarget.dataset.grow || '')
+        parseFloat(target.style.flex.split(' ')[0]) ||
+        parseFloat(target.dataset.grow || '')
     );
 }
 export function closeFlex(

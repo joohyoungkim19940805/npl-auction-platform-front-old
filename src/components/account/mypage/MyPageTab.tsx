@@ -13,17 +13,16 @@ export default function MyPageTab({ tabs }: { tabs: TabItem[] }) {
     const tabsMap = useMemo(
         () =>
             tabs.reduce(
-                (acc, tab, index) => ({ ...acc, [tab.pageName]: index }),
+                (acc, tab, index) => ({ ...acc, [tab.url]: index }),
                 {} as { [key: string]: number }
             ),
         [tabs]
     );
 
     const initialTabIndex = useMemo(
-        () => tabsMap[pathName.split('/').pop() || ''] || 0,
+        () => tabsMap[pathName] || 0,
         [pathName, tabsMap]
     );
-
     const [selectedTab, setSelectedTab] = useState<number>(initialTabIndex);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {

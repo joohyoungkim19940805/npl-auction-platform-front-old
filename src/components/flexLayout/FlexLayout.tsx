@@ -29,8 +29,12 @@ const FlexLayout = (props: FlexLayoutProps) => {
                         {/* 클라이언트 사이드에서만 리사이즈 패널 처리 */}
                         {childrenTemplate[index]['data-is_resize'] && (
                             <FlexResizePanel
+                                containerName={containerProps.containerName}
+                                layoutName={props.layoutName}
                                 direction={direction}
-                                childCount={(children && children.length) || 0}
+                                containerCount={
+                                    (children && children.length) || 0
+                                }
                                 panelMode={panelMode}
                             />
                         )}

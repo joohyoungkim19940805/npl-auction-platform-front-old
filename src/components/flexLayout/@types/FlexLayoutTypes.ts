@@ -30,3 +30,11 @@ export type FlexLayoutProps = {
     children?: ReactNode[];
     layoutName: string;
 };
+
+export type FlexResizePanelProps = {
+    direction: string;
+    containerCount: number;
+    panelMode?: ResizePanelMode;
+    containerName: string;
+    layoutName: string;
+};

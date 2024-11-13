@@ -128,10 +128,9 @@ const AuctionList = () => {
                                         <Image
                                             src={item.representativeImageUrl}
                                             alt={item.title}
-                                            layout="fill"
                                             loading="lazy"
                                             fill={true}
-                                            objectFit="contain"
+                                            style={{ objectFit: 'contain' }}
                                         />
                                         {/*<Box
                                             component="img"

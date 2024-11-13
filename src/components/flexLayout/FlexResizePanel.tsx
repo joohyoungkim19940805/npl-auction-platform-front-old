@@ -1,26 +1,34 @@
 'use client';
 
-import { MouseEvent, useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import type { TouchEvent } from 'react';
 import styles from './FlexLayout.module.css';
 import flexDirectionModel from '@components/flexLayout/@types/FlexDirectionTypes';
 import {
+    closeFlex,
     findNotCloseFlexContent,
+    getGrow,
     isOverMove,
+    mathGrow,
     mathWeight,
+    openFlex,
 } from '@/components/flexLayout/FlexLayoutUtils';
-import { ResizePanelMode } from '@/components/flexLayout/@types/FlexLayoutTypes';
-
-type FlexResizePanelProps = {
-    direction: string;
-    childCount: number;
-    panelMode?: ResizePanelMode;
-};
+import {
+    FlexResizePanelProps,
+    ResizePanelMode,
+} from '@/components/flexLayout/@types/FlexLayoutTypes';
+import { buffer, debounceTime, filter, fromEvent, map } from 'rxjs';
+import {
+    getLayout,
+    setResizePanelRef,
+} from '@/components/flexLayout/FlexLayoutContainerStore';
 
 const FlexResizePanel = ({
     direction,
-    childCount,
+    containerCount,
     panelMode = 'default',
+    containerName,
+    layoutName,
 }: FlexResizePanelProps) => {
     let isResizePanelClick = false;
     let prevTouchEvent: globalThis.TouchEvent | null;
@@ -139,14 +147,16 @@ const FlexResizePanel = ({
                 nextElementSize = 0;
             }
 
-            let targetFlexGrow = (targetSize / (parentSize - 1)) * childCount;
+            let targetFlexGrow =
+                (targetSize / (parentSize - 1)) * containerCount;
             targetElement.style.flex = `${targetFlexGrow} 1 0%`;
             let nextElementFlexGrow =
-                (nextElementSize / (parentSize - 1)) * childCount;
+                (nextElementSize / (parentSize - 1)) * containerCount;
             nextElement.style.flex = `${nextElementFlexGrow} 1 0%`;
             resolve();
         });
     }
+
     useEffect(() => {
         if (!panelRef.current) return;
         let notGrowList: Array<HTMLElement> = [];
@@ -165,7 +175,7 @@ const FlexResizePanel = ({
             item.style.flex = `${grow} 1 0%`;
             t -= grow;
             return t;
-        }, childCount);
+        }, containerCount);
 
         if (notGrowList.length != 0) {
             let resizeWeight = mathWeight(notGrowList.length, totalGrow);
@@ -178,6 +188,7 @@ const FlexResizePanel = ({
             });
         }
     });
+
     useEffect(() => {
         const addGlobalMoveEvent = function (event: Event) {
             if (!isResizePanelClick || !panelRef.current) {
@@ -230,8 +241,11 @@ const FlexResizePanel = ({
                 window.removeEventListener(eventName, panelMouseUpEvent);
             });
         };
-    });
-
+    }, []);
+    useEffect(() => {
+        if (!panelRef.current) return;
+        setResizePanelRef(layoutName, containerName, panelRef);
+    }, [containerName, layoutName]);
     return (
         <div
             className={`${styles['flex-resize-panel']} ${styles[panelMode]}`}

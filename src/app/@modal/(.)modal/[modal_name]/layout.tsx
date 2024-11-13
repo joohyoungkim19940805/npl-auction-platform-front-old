@@ -1,6 +1,6 @@
 import GlobalModalWrapper from '@/components/modal/GlobalModalWrapper';
 import { ReactNode } from 'react';
-import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
+import { ModalType } from '@/components/modal/@types/ModalType';
 
 interface ModelLayoutProps {
     children: ReactNode;

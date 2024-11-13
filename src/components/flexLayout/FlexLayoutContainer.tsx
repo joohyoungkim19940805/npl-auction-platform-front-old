@@ -32,7 +32,7 @@ export const FlexLayoutContainer = ({
     useEffect(() => {
         if (!flexContainerRef.current) return;
         setContainerRef(layoutName, containerName, flexContainerRef);
-    }, []);
+    }, [containerName, layoutName]);
     useEffect(() => {
         // 컴포넌트 크기 및 설정값에 따른 사이즈 재조정
         if (
@@ -71,7 +71,15 @@ export const FlexLayoutContainer = ({
         ) {
             flexContainerRef.current.style.flex = `${flexContainerRef.current.dataset.grow} 1 0%`;
         }
-    }, [size]);
+    }, [
+        size,
+        ref,
+        containerCount,
+        fitContent,
+        isFirstLoad,
+        isFitContent,
+        isFitResize,
+    ]);
 
     return (
         <div

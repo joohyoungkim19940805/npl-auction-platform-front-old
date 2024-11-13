@@ -24,16 +24,21 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
     const pathname = usePathname(); // 현재 경로 가져오기
     useEffect(() => {
         // 특정 layoutName과 containerName을 통해 ref를 구독
-        const subscription = getLayout('main').subscribe(ref => {
-            if (!ref || !ref['lnb'].current) return;
+        const subscription = getLayout('main').subscribe(layout => {
+            if (
+                !layout ||
+                !layout.container['lnb'] ||
+                !layout.container['lnb'].current
+            )
+                return;
             setContainers(
-                Object.values(ref)
+                Object.values(layout.container)
                     .filter(
                         (e): e is { current: HTMLElement } => e.current !== null
                     )
                     .map(e => e.current)
             );
-            setLnbContainer(ref['lnb'].current);
+            setLnbContainer(layout.container['lnb'].current);
         });
 
         // 구독 해제
@@ -50,7 +55,7 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
                     openGrowImportant: mathGrow(
                         parseInt(
                             window.getComputedStyle(lnbContainer).maxWidth
-                        ),
+                        ) || 1,
                         lnbContainer.parentElement?.clientWidth ||
                             window.outerWidth,
                         containers.length
@@ -107,7 +112,7 @@ const SidebarProvider = ({ isSsrMobile }: { isSsrMobile: boolean }) => {
         return () => {
             subscribe.unsubscribe();
         };
-    }, [lnbContainer, containers]);
+    }, [lnbContainer, containers, isMobile]);
     // useEffect(() => {
     //     //특정 hash가 추가될 때 open or close
     //     const hashChangeSubscription = windowHashChange.subscribe(

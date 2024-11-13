@@ -1,6 +1,6 @@
 import { Button, styled } from '@mui/material';
 
-export const BlueButton = styled(Button)(({ theme }) => ({
+const BlueButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#3b82f6',
     color: '#ffffff',
     fontWeight: 'bold',

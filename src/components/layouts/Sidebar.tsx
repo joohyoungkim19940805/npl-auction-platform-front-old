@@ -1,4 +1,4 @@
-import SidebarProvider from '@/components/providers/SidebarProvider';
+import SidebarProvider from '@/components/layouts/providers/SidebarProvider';
 import Favorite from '@mui/icons-material/Favorite';
 import Gavel from '@mui/icons-material/Gavel';
 import Home from '@mui/icons-material/Home';
@@ -35,8 +35,6 @@ const Sidebar = async ({
 
     const userInfo = wrapper?.data;
     const isLogin = wrapper != null && userInfo != undefined;
-    console.log(userInfo, 'userInfo');
-
     return (
         <>
             <SidebarProvider isSsrMobile={isSsrMobile} />

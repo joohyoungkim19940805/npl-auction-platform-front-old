@@ -21,6 +21,7 @@ import {
 } from '@/components/flexLayout/FlexLayoutContainerStore';
 import { mathGrow } from '@/components/flexLayout/FlexLayoutUtils';
 import { lnbOpenSubject } from '@/handler/subject/LnbSubject';
+import GNBProvider from '@/components/layouts/providers/GNBProvider';
 const gnbItems = [
     { label: '메뉴', icon: MenuIcon },
     { label: '검색', href: '/search', icon: SearchIcon },
@@ -49,37 +50,43 @@ const GNB = () => {
     useEffect(() => {
         setGnbIndex(handleGnbTab());
     }, [pathname]); // pathname이 변경될 때마다 실행
-    useEffect(() => {
-        const subscription = getLayout('root').subscribe(layout => {
-            if (!layout || !firstGnbItemRef.current) return;
-            const { bottom } = layout;
-            if (!bottom || !bottom.current) return;
-            if (!isMobile) {
-                bottom.current.dataset.prev_grow = bottom.current.dataset.grow;
-                bottom.current.dataset.grow = '0';
-                bottom.current.style.flex = `0 1 0%`;
-                return;
-            }
-            const parentSize =
-                bottom.current.parentElement?.clientHeight ||
-                window.outerHeight;
-            const newGrow = mathGrow(
-                firstGnbItemRef.current.getBoundingClientRect().height,
-                parentSize,
-                Object.keys(layout).length
-            );
-            bottom.current.dataset.prev_grow = bottom.current.dataset.grow;
-            bottom.current.dataset.grow = newGrow.toString();
-            bottom.current.style.flex = `${newGrow} 1 0%`;
-        });
 
-        return () => {
-            subscription.unsubscribe();
-        };
-    });
+    // useEffect(() => {
+    //     const subscription = getLayout('root').subscribe(layout => {
+    //         if (!layout || !firstGnbItemRef.current) return;
+    //         const { container } = layout,
+    //             { bottom } = container;
+    //         if (!bottom || !bottom.current) return;
+    //         if (!isMobile) {
+    //             bottom.current.dataset.prev_grow = bottom.current.dataset.grow;
+    //             bottom.current.dataset.grow = '0';
+    //             bottom.current.style.flex = `0 1 0%`;
+    //             return;
+    //         }
+    //         const parentSize =
+    //             bottom.current.parentElement?.clientHeight ||
+    //             window.outerHeight;
+    //         const newGrow = mathGrow(
+    //             firstGnbItemRef.current.getBoundingClientRect().height,
+    //             parentSize,
+    //             Object.keys(layout).length
+    //         );
+    //         bottom.current.dataset.prev_grow = bottom.current.dataset.grow;
+    //         bottom.current.dataset.grow = newGrow.toString();
+    //         bottom.current.style.flex = `${newGrow} 1 0%`;
+    //     });
+
+    //     return () => {
+    //         subscription.unsubscribe();
+    //     };
+    // });
 
     return (
         <>
+            <GNBProvider
+                firstGnbItemRef={firstGnbItemRef}
+                isMobile={isMobile}
+            />
             <BottomNavigation
                 value={gnbIndex}
                 sx={{

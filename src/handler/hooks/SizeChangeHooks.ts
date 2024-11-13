@@ -8,6 +8,10 @@ export const useSize = (sizeName: 'height' | 'width') => {
     useEffect(() => {
         if (!ref.current) return;
         setSize(ref.current.getBoundingClientRect()[sizeName as keyof DOMRect]);
+    }, [sizeName]);
+    useEffect(() => {
+        if (!ref.current) return;
+
         const childrenChangeObserver = new MutationObserver(
             (mutationList, observer) => {
                 mutationList.forEach(mutation => {
@@ -40,14 +44,26 @@ export const useSize = (sizeName: 'height' | 'width') => {
             subscribe.unsubscribe();
             //childrenChangeObserver.disconnect();
         };
-    });
+    }, [size, sizeName]);
 
     return { ref, size };
 };
 export const useFirstChildSize = (sizeName: string) => {
     const ref = useRef<HTMLDivElement>(null);
     const [sizes, setSizes] = useState<Array<number>>();
-
+    useEffect(() => {
+        if (!ref.current || !ref.current.children[0]) return;
+        if (!sizes || sizes.length === 0) {
+            setSizes([
+                ref.current.getBoundingClientRect()[
+                    sizeName as keyof DOMRect
+                ] as number,
+                ref.current.children[0].getBoundingClientRect()[
+                    sizeName as keyof DOMRect
+                ] as number,
+            ]);
+        }
+    }, []);
     useEffect(() => {
         if (!ref.current || !ref.current.children[0]) return;
         const childrenChangeObserver = new MutationObserver(
@@ -72,14 +88,7 @@ export const useFirstChildSize = (sizeName: string) => {
             childList: true,
             subtree: true,
         });
-        setSizes([
-            ref.current.getBoundingClientRect()[
-                sizeName as keyof DOMRect
-            ] as number,
-            ref.current.children[0].getBoundingClientRect()[
-                sizeName as keyof DOMRect
-            ] as number,
-        ]);
+
         const subscribe = windowResize.subscribe(ev => {
             if (!ref.current || !ref.current.children[0]) return;
             setSizes([
@@ -95,6 +104,6 @@ export const useFirstChildSize = (sizeName: string) => {
             subscribe.unsubscribe();
             childrenChangeObserver.disconnect();
         };
-    }, [ref]);
+    }, [sizeName, sizes]);
     return { ref, sizes };
 };

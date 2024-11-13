@@ -1,6 +1,6 @@
 import { Button, styled } from '@mui/material';
 
-export const GrayButton = styled(Button)(({ theme }) => ({
+const GrayButton = styled(Button)(({ theme }) => ({
     margin: '4rem 0 2rem 0',
     backgroundColor: '#f0f0f0', // 기본 배경색
     color: '#333',

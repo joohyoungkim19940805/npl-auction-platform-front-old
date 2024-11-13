@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { filter, map, scan } from 'rxjs/operators';
 
 // 중첩된 객체 구조로 ref를 관리하는 타입
@@ -11,6 +11,8 @@ type RefStore = {
 
 // 초기값으로 빈 객체를 설정한 BehaviorSubject 생성
 export const flexContainerStore = new BehaviorSubject<RefStore>({});
+
+export const flexResizePanelStore = new BehaviorSubject<RefStore>({});
 
 // 구독 시 이전 상태들을 축적하여 관리
 // const stateWithHistory$ = flexContainerStore.pipe(
@@ -49,11 +51,47 @@ export const setContainerRef = (
     });
 };
 
+// ref를 업데이트하는 함수
+export const setResizePanelRef = (
+    layoutName: string,
+    containerName: string,
+    ref: React.RefObject<HTMLElement>
+) => {
+    const currentRefs = flexResizePanelStore.getValue();
+    // layoutName 또는 containerName 중복 검사
+    if (currentRefs[layoutName]?.[containerName]) {
+        return;
+    }
+    flexResizePanelStore.next({
+        ...currentRefs,
+        [layoutName]: {
+            ...currentRefs[layoutName],
+            [containerName]: ref,
+        },
+    });
+};
+
 // 특정 layoutName을 구독하는 함수
+// export const getLayout2 = (layoutName: string) => {
+//     return flexContainerStore.asObservable().pipe(
+//         map((refs: RefStore) => refs[layoutName] || null),
+//         filter(ref => ref !== null)
+//     );
+// };
 export const getLayout = (layoutName: string) => {
-    return flexContainerStore.asObservable().pipe(
-        map((refs: RefStore) => refs[layoutName] || null),
-        filter(ref => ref !== null)
+    return combineLatest([flexContainerStore, flexResizePanelStore]).pipe(
+        map(([containerRefs, resizePanelRefs]) => {
+            // 두 Store에서 layoutName에 해당하는 값을 병합
+            const containerData = containerRefs[layoutName] || {};
+            const resizePanelData = resizePanelRefs[layoutName] || {};
+
+            // container와 resizePanel 데이터 합치기
+            return {
+                container: containerData,
+                resizePanel: resizePanelData,
+            };
+        }),
+        filter(result => result.container !== null) // 빈 객체 제외
     );
 };
 
@@ -67,6 +105,38 @@ export const getContainerRef = ({
     layoutName?: string;
 }) => {
     return flexContainerStore.pipe(
+        map((refs: RefStore) => {
+            if (layoutName) {
+                // 지정된 layoutName에서 해당 containerName의 ref 반환
+                return refs[layoutName]?.[containerName] || null;
+            } else {
+                // 모든 layout에서 해당 containerName의 ref 찾기
+                return Object.entries(refs).find(
+                    ([key, value]) => refs[key][containerName]
+                )?.[1][containerName];
+            }
+            // else {
+            //     // 모든 layout에서 해당 containerName의 ref 찾기
+            //     for (const layout in refs) {
+            //         if (refs[layout][containerName]) {
+            //             return refs[layout][containerName];
+            //         }
+            //     }
+            //     return null;
+            // }
+        }),
+        filter(ref => ref !== null)
+    );
+};
+
+export const getResizePanelRef = ({
+    containerName,
+    layoutName,
+}: {
+    containerName: string;
+    layoutName?: string;
+}) => {
+    return flexResizePanelStore.pipe(
         map((refs: RefStore) => {
             if (layoutName) {
                 // 지정된 layoutName에서 해당 containerName의 ref 반환

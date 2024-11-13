@@ -3,7 +3,7 @@ import { Box, Typography, Modal, IconButton, Button } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
-import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
+import { ModalType } from '@/components/modal/@types/ModalType';
 export const GlobalModalWrapper = ({
     isOpen: initOpen,
     type = 'message',

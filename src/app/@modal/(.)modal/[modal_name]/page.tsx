@@ -1,5 +1,5 @@
 import GlobalModalWrapper from '@/components/modal/GlobalModalWrapper';
-import { ModalType } from '@/app/@modal/(.)modal/[modal_name]/@types/ModalType';
+import { ModalType } from '@/components/modal/@types/ModalType';
 import AuctionInfoModal from '@/components/modal/AuctionInfoModal';
 import StandardModal from '@/components/modal/StandardModal';
 
@@ -10,12 +10,13 @@ const ModalPage = async ({
     //params: Promise<{ modal_name: ModalType }>;
     searchParams: Promise<{
         content_name: string;
-        text: string;
+        text: string[];
         title: string;
     }>;
 }) => {
     const { content_name: contentName, text, title } = await searchParams;
-    const lodaModalContent = async (contentName: string) => {
+    const lodaModalContent = async (contentName?: string) => {
+        if (!contentName) return null;
         try {
             const component = await import(`@components/modal/${contentName}`);
             return component.default;

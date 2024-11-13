@@ -5,9 +5,10 @@ const StandardModal = ({
     text,
     title,
 }: {
-    text: string | null;
+    text: string | string[] | null;
     title: string;
 }) => {
+    console.log('text::: ', text);
     return (
         <>
             {title && (
@@ -20,17 +21,21 @@ const StandardModal = ({
                     {title}
                 </Typography>
             )}
-            <Typography
-                id="info-modal-description"
-                variant="body2"
-                sx={{
-                    mt: 2,
-                    color: '#666',
-                    fontSize: '1rem', // 텍스트 크기 약간 키움
-                }}
-            >
-                {text}
-            </Typography>
+            {text &&
+                [...[text].flatMap(e => e)].map((e, i) => (
+                    <Typography
+                        key={i}
+                        id="info-modal-description"
+                        variant="body2"
+                        sx={{
+                            mt: 2,
+                            color: '#666',
+                            fontSize: '1rem', // 텍스트 크기 약간 키움
+                        }}
+                    >
+                        {e}
+                    </Typography>
+                ))}
         </>
     );
 };

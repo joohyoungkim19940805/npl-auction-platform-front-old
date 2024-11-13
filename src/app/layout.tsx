@@ -17,6 +17,7 @@ import Bottom from '@/app/@bottom/default';
 import Footer from '@/app/@footer/default';
 import Left from '@/app/@left/default';
 import { PageChangingLoading } from '@/components/PageChanger';
+import ModalProvider from '@/components/modal/providers/ModalProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -65,6 +66,7 @@ const RootLayout = async ({
             <ConvertFontSize />
             <body className={inter.className}>
                 <EmotionProvider>
+                    <ModalProvider></ModalProvider>
                     {modal}
                     <FlexLayout
                         direction="column"
